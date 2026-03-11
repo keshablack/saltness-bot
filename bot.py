@@ -614,10 +614,11 @@ def cook(m):
 
         bot.send_message(
             m.chat.id,
-            f"⏱ Варка ещё идёт\nОсталось {seconds} сек",
+            f"⏱️ Варка ещё идёт\nОсталось {seconds} сек",
             reply_markup=lab_menu()
         )
         return
+
 
     gain=p["lab_lvl"]*2
 
@@ -627,19 +628,24 @@ def cook(m):
 
     save()
 
-    bot.send_message(
-        m.chat.id,
-        f"""
+    with open("var.jpg","rb") as photo:
+
+        bot.send_photo(
+            m.chat.id,
+            photo,
+            caption=f"""
 🧪 Стёпа сварил стафф
 
 🧊 +{gain} мефа
 
 📦 Теперь у тебя:
+
 🧊 {p['mef']} мефа
 🧂 {p['sol']} соли
+💰 {p['money']}₽
 """,
-        reply_markup=lab_menu()
-    )
+            reply_markup=lab_menu()
+        )
 
 
 @bot.message_handler(func=lambda m:m.text=="⬆ Апгрейд лаборатории")
