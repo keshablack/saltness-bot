@@ -166,8 +166,8 @@ def mef_roulette_start(m):
         )
         return
 
-    p["money"]-=1500
-    "roulette": False
+    p["money"] -= 1500
+    p["roulette"] = False
     save()
 
     bot.send_message(
