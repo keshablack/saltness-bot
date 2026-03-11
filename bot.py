@@ -531,7 +531,7 @@ def work(m):
 
         if p["mef"]+p["sol"]==0:
 
-            with open("oper.png","rb") as photo:
+            with open("oper.PNG","rb") as photo:
 
                 bot.send_photo(
                     m.chat.id,
@@ -548,7 +548,7 @@ def work(m):
             p["mef"]-=lost_mef
             p["sol"]-=lost_sol
 
-            with open("oper.png","rb") as photo:
+            with open("oper.PNG","rb") as photo:
 
                 bot.send_photo(
                     m.chat.id,
