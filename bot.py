@@ -208,13 +208,34 @@ def rub_start(m):
         return
 
     p["money"]-=1000
+    save()
+
+    msg=bot.send_message(m.chat.id,"🎰 Крутим рулетку...")
+
+    animation=[
+        "🎰 | 🔴 ⚫ ⚫ |",
+        "🎰 | ⚫ 🔴 ⚫ |",
+        "🎰 | ⚫ ⚫ 🔴 |",
+        "🎰 | 🔴 ⚫ ⚫ |",
+        "🎰 | ⚫ 🔴 ⚫ |"
+    ]
+
+    for frame in animation:
+
+        time.sleep(0.6)
+
+        bot.edit_message_text(
+            frame,
+            m.chat.id,
+            msg.message_id
+        )
 
     if random.randint(1,2)==1:
 
         win=2000
         p["money"]+=win
 
-        text=f"""
+        result=f"""
 🎰 Рулетка
 
 🎉 Ты выиграл {win}₽
@@ -224,7 +245,7 @@ def rub_start(m):
 
     else:
 
-        text=f"""
+        result=f"""
 🎰 Рулетка
 
 😐 Ты проиграл
@@ -234,7 +255,11 @@ def rub_start(m):
 
     save()
 
-    bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
+    bot.edit_message_text(
+        result,
+        m.chat.id,
+        msg.message_id
+    )
 
 
 # ===== РУЛЕТКА МЕФ =====
