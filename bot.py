@@ -33,6 +33,7 @@ def get_player(user):
             "xp":0,
             "lvl":1,
             "last":0
+            "roulette": False
         }
 
     players[uid]["name"]=user.first_name
@@ -52,6 +53,7 @@ def menu():
 def kraken_menu():
     kb = ReplyKeyboardMarkup(resize_keyboard=True)
     kb.row("💰 Продать стафф")
+    kb.row("🎰 Рулетка ₽","🧊 Рулетка Меф")
     kb.row("⬅ Назад")
     return kb
 
@@ -80,7 +82,7 @@ def inv(m):
 🧊 Меф: {p['mef']}
 🧂 Соляга: {p['sol']}
 
-💰 Деньги: {p['money']}$
+💰 Деньги: {p['money']}₽
 ⭐ Уровень: {p['lvl']}
 XP: {p['xp']}/{p['lvl']*10}
 """,
@@ -148,8 +150,61 @@ def sell(m):
 
     save()
 
-    bot.send_message(m.chat.id,f"💰 Ты продал стафф на {money}$",reply_markup=kraken_menu())
+    bot.send_message(m.chat.id,f"💰 Ты продал стафф на {money}₽",reply_markup=kraken_menu())
+    
+    @bot.message_handler(func=lambda m: m.text=="🧊 Рулетка Меф")
+def mef_roulette_start(m):
 
+    p=get_player(m.from_user)
+
+    if p["money"]<1500:
+        bot.send_message(
+            m.chat.id,
+            "💸 Нужно 1500₽ для игры",
+            reply_markup=kraken_menu()
+        )
+        return
+
+    p["money"]-=1500
+    "roulette": False
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        "🎰 Выбери число от 1 до 10"
+    )
+    
+@bot.message_handler(func=lambda m: m.text.isdigit())
+def mef_roulette_play(m):
+
+    p=get_player(m.from_user)
+
+    if not p.get("roulette"):
+        return
+
+    num=int(m.text)
+
+    if num<1 or num>10:
+        bot.send_message(m.chat.id,"Выбери число от 1 до 10")
+        return
+
+    win=random.randint(1,10)
+
+    if num==win:
+        p["mef"]+=5
+        text=f"🎉 Ты угадал число {win}!\n\n🧊 +5 мефа"
+    else:
+        text=f"😐 Выпало число {win}\nТы проиграл."
+
+    p["roulette"]=False
+
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        text,
+        reply_markup=kraken_menu()
+    )
 
 # ===== ШКУРКА =====
 
