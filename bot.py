@@ -450,13 +450,14 @@ def work(m):
                 caption=f"""
 💎 МАСТЕРКЛАД
 
-Ого… ты сошкурил чей-то мастер клад
+Ого… ты сошкурил чей-то мастерклад
 
 🧊 +10г мефа
 
 📦 Теперь у тебя:
 🧊 {p['mef']}г
 🧂 {p['sol']}г
+💰 {p['money']}₽
 """,
                 reply_markup=menu()
             )
@@ -481,6 +482,7 @@ def work(m):
 📦 Сейчас у тебя:
 🧊 {p['mef']}г
 🧂 {p['sol']}г
+💰 {p['money']}₽
 """,
                 reply_markup=menu()
             )
@@ -505,6 +507,7 @@ def work(m):
 📦 Сейчас у тебя:
 🧊 {p['mef']}г
 🧂 {p['sol']}г
+💰 {p['money']}₽
 """,
                 reply_markup=menu()
             )
@@ -513,7 +516,7 @@ def work(m):
     # ===== ПУСТО (27%) =====
     elif r<=80:
 
-        with open("images/pusto.png","rb") as photo:
+        with open("pusto.png.jpg","rb") as photo:
 
             bot.send_photo(
                 m.chat.id,
@@ -565,42 +568,6 @@ def work(m):
     p["last"]=now
 
     save()
-
-
-    # ===== ПУСТО =====
-    else:
-
-        with open("pusto.png.jpg","rb") as photo:
-
-            bot.send_photo(
-                m.chat.id,
-                photo,
-                caption="😐 Вот не повезло, пусто",
-                reply_markup=menu()
-            )
-
-        p["last"]=now
-        save()
-        return
-
-
-    p["last"]=now
-
-    save()
-
-    bot.send_message(
-        m.chat.id,
-        f"""
-{text}
-
-📦 Сейчас у тебя:
-
-🧊 Меф: {p['mef']}г
-🧂 Соль: {p['sol']}г
-💰 Деньги: {p['money']}₽
-""",
-        reply_markup=menu()
-    )
 
 
 # ===== ЛАБОРАТОРИЯ =====
