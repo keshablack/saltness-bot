@@ -192,17 +192,8 @@ def kraken(m):
     )
 
 
-@bot.message_handler(func=lambda m:m.text=="⬅️ Назад")
-def back(m):
+# ===== РЕФЕРАЛКА =====
 
-    bot.send_message(
-        m.chat.id,
-        "🏠 Главное меню",
-        reply_markup=menu()
-    )
-
-
-    # ===== РЕФЕРАЛКА =====
 @bot.message_handler(func=lambda m:m.text=="👥 Реферальная ссылка")
 def ref_link(m):
 
@@ -486,7 +477,7 @@ def work(m):
     )
 
 
-    # ===== ЛАБОРАТОРИЯ =====
+# ===== ЛАБОРАТОРИЯ =====
 
 @bot.message_handler(func=lambda m:m.text=="🧪 Лаборатория")
 def lab(m):
