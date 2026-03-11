@@ -8,7 +8,7 @@ import os
 TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
-DATA_FILE = "players.json"
+DATA_FILE = os.getenv("DATA_FILE","players.json")
 
 try:
     with open(DATA_FILE,"r") as f:
