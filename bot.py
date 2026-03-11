@@ -180,11 +180,14 @@ def kraken(m):
     )
 
 
-@bot.message_handler(func=lambda m:m.text=="⬅ Назад")
+@bot.message_handler(func=lambda m:m.text=="⬅️ Назад")
 def back(m):
 
-    bot.send_message(m.chat.id,"Главное меню",reply_markup=menu())
-
+    bot.send_message(
+        m.chat.id,
+        "🏠 Главное меню",
+        reply_markup=menu()
+    )
 
 # ===== ПРОДАЖА =====
 
@@ -553,9 +556,11 @@ def ref_link(m):
 
     p=get_player(m.from_user)
 
-    uid=str(m.from_user.id)
+    uid = str(m.from_user.id)
 
-    link=f"https://t.me/{bot.get_me().username}?start={uid}"
+    bot_info = bot.get_me()
+
+    link = f"https://t.me/{bot_info.username}?start={uid}"
 
     bot.send_message(
         m.chat.id,
@@ -575,5 +580,5 @@ def ref_link(m):
         reply_markup=kraken_menu()
     )
 
-    
+
 bot.infinity_polling()
