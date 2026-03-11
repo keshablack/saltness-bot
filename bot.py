@@ -386,4 +386,112 @@ def work(m):
     )
 
 
+    # ===== ЛАБОРАТОРИЯ =====
+
+@bot.message_handler(func=lambda m:m.text=="🧪 Лаборатория")
+def lab(m):
+
+    p=get_player(m.from_user)
+
+    bonus=p["lab_lvl"]*5
+    cooldown=p["lab_lvl"]*30
+    price=p["lab_lvl"]*5000
+
+    bot.send_message(
+        m.chat.id,
+        f"""
+🧪 Лаборатория Стёпы
+
+👨‍🔬 Стёпа варщик: нанят
+🏭 Уровень лаборатории: {p['lab_lvl']}
+
+Бонусы:
++{bonus}% шанс мефа
+−{cooldown} сек кулдаун
+
+💰 Апгрейд лаборатории — {price}₽
+""",
+        reply_markup=lab_menu()
+    )
+
+
+@bot.message_handler(func=lambda m:m.text=="👨‍🔬 Варить")
+def cook(m):
+
+    p=get_player(m.from_user)
+
+    now=time.time()
+
+    cooldown=600-(p["lab_lvl"]*30)
+
+    if now-p["lab_last"]<cooldown:
+
+        seconds=int(cooldown-(now-p["lab_last"]))
+
+        bot.send_message(
+            m.chat.id,
+            f"⏱ Варка ещё идёт\nОсталось {seconds} сек",
+            reply_markup=lab_menu()
+        )
+        return
+
+    gain=p["lab_lvl"]*2
+
+    p["mef"]+=gain
+    p["total"]+=gain
+    p["lab_last"]=now
+
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        f"""
+🧪 Стёпа сварил стафф
+
+🧊 +{gain} мефа
+
+📦 Теперь у тебя:
+🧊 {p['mef']} мефа
+🧂 {p['sol']} соли
+""",
+        reply_markup=lab_menu()
+    )
+
+
+@bot.message_handler(func=lambda m:m.text=="⬆ Апгрейд лаборатории")
+def lab_upgrade(m):
+
+    p=get_player(m.from_user)
+
+    price=p["lab_lvl"]*5000
+
+    if p["money"]<price:
+
+        bot.send_message(
+            m.chat.id,
+            f"💸 Нужно {price}₽ для апгрейда",
+            reply_markup=lab_menu()
+        )
+        return
+
+    p["money"]-=price
+    p["lab_lvl"]+=1
+
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        f"""
+⬆ Лаборатория улучшена!
+
+🏭 Новый уровень: {p['lab_lvl']}
+
+Теперь:
++{p['lab_lvl']*5}% шанс мефа
+−{p['lab_lvl']*30} сек кулдаун
+""",
+        reply_markup=lab_menu()
+    )
+
+
 bot.infinity_polling()
