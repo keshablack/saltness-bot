@@ -37,7 +37,10 @@ def get_player(user):
             "roulette":False,
             "lab_lvl":1,
             "lab_last":0,
-            "total":0
+            "total":0,
+            "ref":None,
+            "refs":0,
+            "ref_reward":0
         }
 
     players[uid]["name"]=user.first_name
@@ -63,10 +66,10 @@ def kraken_menu():
 
     kb.row("💰 Продать стафф")
     kb.row("🎰 Рулетка ₽","🧊 Рулетка Меф")
-    kb.row("📦 Инвентарь","⬅ Назад")
+    kb.row("👥 Реферальная ссылка")
+    kb.row("⬅️ Назад")
 
     return kb
-
 
 def lab_menu():
 
@@ -83,6 +86,31 @@ def lab_menu():
 
 @bot.message_handler(commands=["start"])
 def start(m):
+
+    p=get_player(m.from_user)
+
+    args=m.text.split()
+
+    if len(args)>1:
+
+        ref_id=args[1]
+
+        if ref_id!=str(m.from_user.id) and not p.get("ref"):
+
+            if ref_id in players:
+
+                players[ref_id]["sol"]+=5
+                players[ref_id]["refs"]+=1
+                players[ref_id]["ref_reward"]+=5
+
+                p["ref"]=ref_id
+
+                bot.send_message(
+                    m.chat.id,
+                    "🎉 Ты зарегистрировался по реферальной ссылке!"
+                )
+
+    save()
 
     bot.send_message(
         m.chat.id,
@@ -519,4 +547,33 @@ def lab_upgrade(m):
     )
 
 
+# ===== РЕФЕРАЛКА =====
+@bot.message_handler(func=lambda m:m.text=="👥 Реферальная ссылка")
+def ref_link(m):
+
+    p=get_player(m.from_user)
+
+    uid=str(m.from_user.id)
+
+    link=f"https://t.me/{bot.get_me().username}?start={uid}"
+
+    bot.send_message(
+        m.chat.id,
+        f"""
+👥 Реферальная система
+
+🧑‍🤝‍🧑 Приглашено друзей: {p['refs']}
+🎁 Получено наград: {p['ref_reward']} соли
+
+За каждого друга:
+🧂 +5 соли
+
+Твоя ссылка:
+
+{link}
+""",
+        reply_markup=kraken_menu()
+    )
+
+    
 bot.infinity_polling()
