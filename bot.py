@@ -32,7 +32,7 @@ def get_player(user):
             "money":0,
             "xp":0,
             "lvl":1,
-            "last":0
+            "last":0,
             "roulette": False
         }
 
