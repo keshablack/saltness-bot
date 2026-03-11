@@ -153,7 +153,7 @@ def sell(m):
 
     bot.send_message(m.chat.id,f"💰 Ты продал стафф на {money}₽",reply_markup=kraken_menu())
     
-    @bot.message_handler(func=lambda m: m.text=="🧊 Рулетка Меф")
+@bot.message_handler(func=lambda m: m.text=="🧊 Рулетка Меф")
 def mef_roulette_start(m):
 
     p=get_player(m.from_user)
