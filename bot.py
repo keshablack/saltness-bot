@@ -424,37 +424,69 @@ def work(m):
 
         bot.send_message(
             m.chat.id,
-            f"⏱ Следующая шкурка через {seconds} сек",
+            f"⏱ Ну ты чайка, потерпи еще {seconds} сек",
             reply_markup=menu()
         )
         return
 
-    bonus=p["lab_lvl"]*2
-    r=random.randint(1,100-bonus)
+
+    r=random.randint(1,100)
+    amount=random.randint(1,3)
 
     p["xp"]+=1
 
-    if r<=50:
 
-        p["mef"]+=1
-        p["total"]+=1
-        text="🧊 Ты сошкурил меф"
+    # ===== МАСТЕРКЛАД =====
+    if r<=3:
 
-    elif r<=65:
+        p["mef"]+=10
+        p["total"]+=10
 
-        p["sol"]+=1
-        p["total"]+=1
-        text="🧂 Ты нашёл солягу"
+        text="""
+💎 МАСТЕРКЛАД
 
-    elif r<=80:
+Ого… ты сошкурил чей-то мастерклад
 
-        text="😐 Сегодня пусто"
+🧊 +10г мефа
+"""
 
-    else:
+
+    # ===== МЕФ =====
+    elif r<=33:
+
+        p["mef"]+=amount
+        p["total"]+=amount
+
+        text=f"""
+🧊 Ты сошкурил клад
+
+🧊 Меф: +{amount}г
+"""
+
+
+    # ===== СОЛЬ =====
+    elif r<=83:
+
+        p["sol"]+=amount
+        p["total"]+=amount
+
+        text=f"""
+🧂 Ты сошкурил клад
+
+🧂 Соль: +{amount}г
+"""
+
+
+    # ===== ОПЕР =====
+    elif r<=93:
 
         if p["mef"]+p["sol"]==0:
 
-            text="👮 Облава, но у тебя ничего не нашли"
+            text="""
+👮 Опер Тимур Соколов
+
+Тебя приняли, но у тебя ничего не нашли
+"""
 
         else:
 
@@ -464,7 +496,31 @@ def work(m):
             p["mef"]-=lost_mef
             p["sol"]-=lost_sol
 
-            text=f"👮 Забрали {lost_mef} мефа и {lost_sol} соли"
+            text=f"""
+👮 Опер Тимур Соколов
+
+Забрал часть стаффа
+
+🧊 -{lost_mef}
+🧂 -{lost_sol}
+"""
+
+
+    # ===== ПУСТО =====
+    else:
+
+        with open("images/pusto.png","rb") as photo:
+
+            bot.send_photo(
+                m.chat.id,
+                photo,
+                caption="😐 Вот не повезло, пусто",
+                reply_markup=menu()
+            )
+
+        p["last"]=now
+        save()
+        return
 
 
     p["last"]=now
@@ -478,8 +534,8 @@ def work(m):
 
 📦 Сейчас у тебя:
 
-🧊 Меф: {p['mef']}
-🧂 Соль: {p['sol']}
+🧊 Меф: {p['mef']}г
+🧂 Соль: {p['sol']}г
 💰 Деньги: {p['money']}₽
 """,
         reply_markup=menu()
