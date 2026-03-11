@@ -82,6 +82,18 @@ def lab_menu():
     return kb
 
 
+# ===== НАЗАД =====
+
+@bot.message_handler(func=lambda m: m.text=="⬅️ Назад")
+def back(m):
+
+    bot.send_message(
+        m.chat.id,
+        "🏠 Главное меню",
+        reply_markup=menu()
+    )
+
+
 # ===== СТАРТ =====
 
 @bot.message_handler(commands=["start"])
@@ -189,6 +201,38 @@ def back(m):
         reply_markup=menu()
     )
 
+
+    # ===== РЕФЕРАЛКА =====
+@bot.message_handler(func=lambda m:m.text=="👥 Реферальная ссылка")
+def ref_link(m):
+
+    p=get_player(m.from_user)
+
+    uid = str(m.from_user.id)
+
+    bot_info = bot.get_me()
+
+    link = f"https://t.me/{bot_info.username}?start={uid}"
+
+    bot.send_message(
+        m.chat.id,
+        f"""
+👥 Реферальная система
+
+🧑‍🤝‍🧑 Приглашено друзей: {p['refs']}
+🎁 Получено наград: {p['ref_reward']} соли
+
+За каждого друга:
+🧂 +5 соли
+
+Твоя ссылка:
+
+{link}
+""",
+        reply_markup=kraken_menu()
+    )
+
+    
 # ===== ПРОДАЖА =====
 
 @bot.message_handler(func=lambda m:m.text=="💰 Продать стафф")
@@ -547,37 +591,6 @@ def lab_upgrade(m):
 −{p['lab_lvl']*30} сек кулдаун
 """,
         reply_markup=lab_menu()
-    )
-
-
-# ===== РЕФЕРАЛКА =====
-@bot.message_handler(func=lambda m:m.text=="👥 Реферальная ссылка")
-def ref_link(m):
-
-    p=get_player(m.from_user)
-
-    uid = str(m.from_user.id)
-
-    bot_info = bot.get_me()
-
-    link = f"https://t.me/{bot_info.username}?start={uid}"
-
-    bot.send_message(
-        m.chat.id,
-        f"""
-👥 Реферальная система
-
-🧑‍🤝‍🧑 Приглашено друзей: {p['refs']}
-🎁 Получено наград: {p['ref_reward']} соли
-
-За каждого друга:
-🧂 +5 соли
-
-Твоя ссылка:
-
-{link}
-""",
-        reply_markup=kraken_menu()
     )
 
 
