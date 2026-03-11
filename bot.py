@@ -4,8 +4,9 @@ import time
 import json
 from telebot.types import ReplyKeyboardMarkup
 
-# вставь сюда токен из BotFather
-TOKEN = "PASTE_YOUR_BOT_TOKEN"
+import os
+
+TOKEN = os.getenv("BOT_TOKEN")
 
 bot = telebot.TeleBot(TOKEN)
 
