@@ -30,11 +30,14 @@ def get_player(user):
             "name": user.first_name,
             "mef":0,
             "sol":0,
+            "money":0,
+            "xp":0,
+            "lvl":1,
             "last":0
         }
 
-    players[uid]["name"] = user.first_name
-    return players[uid]
+    players[uid]["name"]=user.first_name
+
     return players[uid]
 
 def menu():
