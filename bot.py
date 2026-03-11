@@ -22,14 +22,19 @@ def save():
     with open(DATA_FILE, "w") as f:
         json.dump(players, f)
 
-def get_player(uid):
-    uid = str(uid)
+def get_player(user):
+    uid=str(user.id)
+
     if uid not in players:
-        players[uid] = {
-            "mef": 0,
-            "sol": 0,
-            "last": 0
+        players[uid]={
+            "name": user.first_name,
+            "mef":0,
+            "sol":0,
+            "last":0
         }
+
+    players[uid]["name"] = user.first_name
+    return players[uid]
     return players[uid]
 
 def menu():
