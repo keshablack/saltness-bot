@@ -170,22 +170,23 @@ XP: {p['xp']}/{p['lvl']*10}
 
 # ===== ТОП =====
 
-@bot.message_handler(func=lambda m:m.text=="🏆 Топ")
+@bot.message_handler(func=lambda m: m.text=="🏆 Топ")
 def top(m):
 
-    rating=[]
+    top_farm = sorted(players.values(), key=lambda x: x.get("total",0), reverse=True)[:10]
+    top_refs = sorted(players.values(), key=lambda x: x.get("refs",0), reverse=True)[:10]
 
-    for uid,data in players.items():
-        rating.append((data["name"],data.get("total",0)))
+    text = "🏆 Топ шкуроходов\n\n"
 
-    rating=sorted(rating,key=lambda x:x[1],reverse=True)[:10]
+    for i,p in enumerate(top_farm,1):
+        text += f"{i}. {p['name']} — {p.get('total',0)} стаффа\n"
 
-    text="🏆 Топ шкуроходов\n\n"
+    text += "\n👥 Топ рефералов\n\n"
 
-    for i,(name,score) in enumerate(rating,1):
-        text+=f"{i}. {name} — {score} стаффа\n"
+    for i,p in enumerate(top_refs,1):
+        text += f"{i}. {p['name']} — {p.get('refs',0)} друзей\n"
 
-    bot.send_message(m.chat.id,text,reply_markup=menu())
+    bot.send_message(m.chat.id, text, reply_markup=menu())
 
 
 # ===== КРАКЕН =====
