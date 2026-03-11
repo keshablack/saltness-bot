@@ -36,7 +36,8 @@ def get_player(user):
             "last":0,
             "roulette":False,
             "lab_lvl":1,
-            "lab_last":0
+            "lab_last":0,
+            "total":0
         }
 
     players[uid]["name"]=user.first_name
@@ -50,8 +51,8 @@ def menu():
     kb=ReplyKeyboardMarkup(resize_keyboard=True)
 
     kb.row("🧪 Шкурить")
-    kb.row("📦 Инвентарь","🏆 Топ")
-    kb.row("🐙 Кракен","🧪 Лаборатория")
+    kb.row("📦 Инвентарь","🐙 Кракен")
+    kb.row("🧪 Лаборатория","🏆 Топ")
 
     return kb
 
@@ -62,7 +63,7 @@ def kraken_menu():
 
     kb.row("💰 Продать стафф")
     kb.row("🎰 Рулетка ₽","🧊 Рулетка Меф")
-    kb.row("⬅ Назад")
+    kb.row("📦 Инвентарь","⬅ Назад")
 
     return kb
 
@@ -72,8 +73,8 @@ def lab_menu():
     kb=ReplyKeyboardMarkup(resize_keyboard=True)
 
     kb.row("👨‍🔬 Варить")
-    kb.row("⬆ Апгрейд")
-    kb.row("⬅ Назад")
+    kb.row("⬆ Апгрейд лаборатории")
+    kb.row("📦 Инвентарь","⬅ Назад")
 
     return kb
 
@@ -97,10 +98,16 @@ def inv(m):
 
     p=get_player(m.from_user)
 
+    username=m.from_user.username
+    if username:
+        username="@"+username
+    else:
+        username=m.from_user.first_name
+
     bot.send_message(
         m.chat.id,
         f"""
-📦 Инвентарь
+📦 Инвентарь {username}
 
 🧊 Меф: {p['mef']}
 🧂 Соль: {p['sol']}
@@ -121,17 +128,14 @@ def top(m):
     rating=[]
 
     for uid,data in players.items():
-
-        score=data["mef"]+data["sol"]
-        rating.append((data["name"],score))
+        rating.append((data["name"],data.get("total",0)))
 
     rating=sorted(rating,key=lambda x:x[1],reverse=True)[:10]
 
-    text="🏆 Топ игроков\n\n"
+    text="🏆 Топ шкуроходов\n\n"
 
     for i,(name,score) in enumerate(rating,1):
-
-        text+=f"{i}. {name} — {score}\n"
+        text+=f"{i}. {name} — {score} стаффа\n"
 
     bot.send_message(m.chat.id,text,reply_markup=menu())
 
@@ -174,7 +178,63 @@ def sell(m):
 
     save()
 
-    bot.send_message(m.chat.id,f"💰 +{money}₽",reply_markup=kraken_menu())
+    bot.send_message(
+        m.chat.id,
+        f"""
+💰 Продажа
+
+Ты получил {money}₽
+
+Баланс: {p['money']}₽
+""",
+        reply_markup=kraken_menu()
+    )
+
+
+# ===== РУЛЕТКА ₽ =====
+
+@bot.message_handler(func=lambda m:m.text=="🎰 Рулетка ₽")
+def rub_start(m):
+
+    p=get_player(m.from_user)
+
+    if p["money"]<1000:
+
+        bot.send_message(
+            m.chat.id,
+            "💸 Нужно 1000₽ для игры",
+            reply_markup=kraken_menu()
+        )
+        return
+
+    p["money"]-=1000
+
+    if random.randint(1,2)==1:
+
+        win=2000
+        p["money"]+=win
+
+        text=f"""
+🎰 Рулетка
+
+🎉 Ты выиграл {win}₽
+
+💰 Баланс: {p['money']}₽
+"""
+
+    else:
+
+        text=f"""
+🎰 Рулетка
+
+😐 Ты проиграл
+
+💰 Баланс: {p['money']}₽
+"""
+
+    save()
+
+    bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
 
 
 # ===== РУЛЕТКА МЕФ =====
@@ -191,41 +251,11 @@ def mef_start(m):
 
     p["money"]-=1500
     p["roulette"]=True
-    save()
-
-    bot.send_message(m.chat.id,"🎰 Число 1-10")
-
-
-# ===== РУЛЕТКА ₽ =====
-
-@bot.message_handler(func=lambda m:m.text=="🎰 Рулетка ₽")
-def rub_start(m):
-
-    p=get_player(m.from_user)
-
-    if p["money"]<1000:
-
-        bot.send_message(m.chat.id,"💸 Нужно 1000₽",reply_markup=kraken_menu())
-        return
-
-    p["money"]-=1000
-
-    if random.randint(1,2)==1:
-
-        win=2000
-        p["money"]+=win
-        text=f"🎉 Ты выиграл {win}₽"
-
-    else:
-
-        text="😐 Ты проиграл"
 
     save()
 
-    bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
+    bot.send_message(m.chat.id,"🎰 Выбери число от 1 до 10")
 
-
-# ===== ЧИСЛО РУЛЕТКИ =====
 
 @bot.message_handler(func=lambda m:m.text.isdigit())
 def roulette_play(m):
@@ -245,79 +275,36 @@ def roulette_play(m):
     if num==win:
 
         p["mef"]+=5
-        text=f"🎉 Угадал {win}\n🧊 +5 мефа"
+
+        text=f"""
+🎰 Рулетка Меф
+
+🎉 Угадал число {win}
+
+🧊 +5 мефа
+
+Теперь у тебя:
+🧊 {p['mef']} мефа
+🧂 {p['sol']} соли
+"""
 
     else:
 
-        text=f"😐 Выпало {win}"
+        text=f"""
+🎰 Рулетка Меф
+
+😐 Выпало число {win}
+
+📦 У тебя осталось:
+🧊 {p['mef']} мефа
+🧂 {p['sol']} соли
+"""
 
     p["roulette"]=False
 
     save()
 
     bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
-
-
-# ===== ЛАБОРАТОРИЯ =====
-
-@bot.message_handler(func=lambda m:m.text=="🧪 Лаборатория")
-def lab(m):
-
-    p=get_player(m.from_user)
-
-    bot.send_message(
-        m.chat.id,
-        f"""
-🧪 Лаборатория Стёпы
-
-👨‍🔬 уровень: {p['lab_lvl']}
-""",
-        reply_markup=lab_menu()
-    )
-
-
-@bot.message_handler(func=lambda m:m.text=="👨‍🔬 Варить")
-def cook(m):
-
-    p=get_player(m.from_user)
-
-    now=time.time()
-
-    cooldown=600-(p["lab_lvl"]*30)
-
-    if now-p["lab_last"]<cooldown:
-
-        bot.send_message(m.chat.id,"⏱ ещё варится",reply_markup=lab_menu())
-        return
-
-    gain=p["lab_lvl"]
-
-    p["mef"]+=gain
-    p["lab_last"]=now
-
-    save()
-
-    bot.send_message(m.chat.id,f"🧊 Стёпа сварил {gain} мефа",reply_markup=lab_menu())
-
-
-@bot.message_handler(func=lambda m:m.text=="⬆ Апгрейд")
-def lab_upgrade(m):
-
-    p=get_player(m.from_user)
-
-    price=p["lab_lvl"]*5000
-
-    if p["money"]<price:
-
-        bot.send_message(m.chat.id,f"💸 Нужно {price}₽",reply_markup=lab_menu())
-        return
-
-    p["money"]-=price
-    p["lab_lvl"]+=1
-
-    save()
-
-    bot.send_message(m.chat.id,"⬆ лаборатория улучшена",reply_markup=lab_menu())
 
 
 # ===== ШКУРКА =====
@@ -329,29 +316,45 @@ def work(m):
 
     now=time.time()
 
-    if now-p["last"]<180:
+    cooldown=180-(p["lab_lvl"]*10)
 
-        bot.send_message(m.chat.id,"⏱ подожди",reply_markup=menu())
+    if now-p["last"]<cooldown:
+
+        seconds=int(cooldown-(now-p["last"]))
+
+        bot.send_message(
+            m.chat.id,
+            f"⏱ Следующая шкурка через {seconds} сек",
+            reply_markup=menu()
+        )
         return
 
-    r=random.randint(1,100)
+    bonus=p["lab_lvl"]*2
+    r=random.randint(1,100-bonus)
+
+    p["xp"]+=1
 
     if r<=50:
+
         p["mef"]+=1
-        text="🧊 меф"
+        p["total"]+=1
+        text="🧊 Ты сошкурил меф"
 
     elif r<=65:
+
         p["sol"]+=1
-        text="🧂 соль"
+        p["total"]+=1
+        text="🧂 Ты нашёл солягу"
 
     elif r<=80:
-        text="😐 пусто"
+
+        text="😐 Сегодня пусто"
 
     else:
 
         if p["mef"]+p["sol"]==0:
 
-            text="👮 облава но ничего не нашли"
+            text="👮 Облава, но у тебя ничего не нашли"
 
         else:
 
@@ -361,12 +364,26 @@ def work(m):
             p["mef"]-=lost_mef
             p["sol"]-=lost_sol
 
-            text=f"👮 забрали\n🧊{lost_mef}\n🧂{lost_sol}"
+            text=f"👮 Забрали {lost_mef} мефа и {lost_sol} соли"
+
 
     p["last"]=now
+
     save()
 
-    bot.send_message(m.chat.id,text,reply_markup=menu())
+    bot.send_message(
+        m.chat.id,
+        f"""
+{text}
+
+📦 Сейчас у тебя:
+
+🧊 Меф: {p['mef']}
+🧂 Соль: {p['sol']}
+💰 Деньги: {p['money']}₽
+""",
+        reply_markup=menu()
+    )
 
 
 bot.infinity_polling()
