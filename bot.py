@@ -22,22 +22,21 @@ def save():
         json.dump(players, f)
 
 def get_player(user):
-    uid=str(user.id)
+    uid = str(user.id)
 
     if uid not in players:
-        players[uid]={
+        players[uid] = {
             "name": user.first_name,
-            "mef":0,
-            "sol":0,
-            "money":0,
-            "xp":0,
-            "lvl":1,
-            "last":0,
+            "mef": 0,
+            "sol": 0,
+            "money": 0,
+            "xp": 0,
+            "lvl": 1,
+            "last": 0,
             "roulette": False
         }
 
-    players[uid]["name"]=user.first_name
-
+    players[uid]["name"] = user.first_name
     return players[uid]
 
 
@@ -45,9 +44,11 @@ def get_player(user):
 
 def menu():
     kb = ReplyKeyboardMarkup(resize_keyboard=True)
+
     kb.row("🧪 Шкурить")
-    kb.row("📦 Инвентарь","🏆 Топ")
+    kb.row("📦 Инвентарь", "🏆 Топ")
     kb.row("🐙 Кракен")
+
     return kb
 
 def kraken_menu():
