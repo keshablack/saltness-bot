@@ -436,57 +436,106 @@ def work(m):
     p["xp"]+=1
 
 
-    # ===== МАСТЕРКЛАД =====
+    # ===== МАСТЕРКЛАД (3%) =====
     if r<=3:
 
         p["mef"]+=10
         p["total"]+=10
 
-        text="""
+        with open("masterklad.jpg","rb") as photo:
+
+            bot.send_photo(
+                m.chat.id,
+                photo,
+                caption=f"""
 💎 МАСТЕРКЛАД
 
-Ого… ты сошкурил чей-то мастерклад
+Ого… ты сошкурил чей-то мастер клад
 
 🧊 +10г мефа
-"""
+
+📦 Теперь у тебя:
+🧊 {p['mef']}г
+🧂 {p['sol']}г
+""",
+                reply_markup=menu()
+            )
 
 
-    # ===== МЕФ =====
-    elif r<=33:
+    # ===== МЕФ (20%) =====
+    elif r<=23:
 
         p["mef"]+=amount
         p["total"]+=amount
 
-        text=f"""
+        with open("mef.jpg","rb") as photo:
+
+            bot.send_photo(
+                m.chat.id,
+                photo,
+                caption=f"""
 🧊 Ты сошкурил клад
 
 🧊 Меф: +{amount}г
-"""
+
+📦 Сейчас у тебя:
+🧊 {p['mef']}г
+🧂 {p['sol']}г
+""",
+                reply_markup=menu()
+            )
 
 
-    # ===== СОЛЬ =====
-    elif r<=83:
+    # ===== СОЛЬ (30%) =====
+    elif r<=53:
 
         p["sol"]+=amount
         p["total"]+=amount
 
-        text=f"""
+        with open("salt.png","rb") as photo:
+
+            bot.send_photo(
+                m.chat.id,
+                photo,
+                caption=f"""
 🧂 Ты сошкурил клад
 
 🧂 Соль: +{amount}г
-"""
+
+📦 Сейчас у тебя:
+🧊 {p['mef']}г
+🧂 {p['sol']}г
+""",
+                reply_markup=menu()
+            )
 
 
-    # ===== ОПЕР =====
-    elif r<=93:
+    # ===== ПУСТО (27%) =====
+    elif r<=80:
+
+        with open("images/pusto.png","rb") as photo:
+
+            bot.send_photo(
+                m.chat.id,
+                photo,
+                caption="😐 Вот не повезло, пусто",
+                reply_markup=menu()
+            )
+
+
+    # ===== ОПЕР (20%) =====
+    else:
 
         if p["mef"]+p["sol"]==0:
 
-            text="""
-👮 Опер Тимур Соколов
+            with open("oper.png","rb") as photo:
 
-Тебя приняли, но у тебя ничего не нашли
-"""
+                bot.send_photo(
+                    m.chat.id,
+                    photo,
+                    caption="👮 Опер Тимур Соколов принял тебя, но у тебя ничего не нашли",
+                    reply_markup=menu()
+                )
 
         else:
 
@@ -496,14 +545,26 @@ def work(m):
             p["mef"]-=lost_mef
             p["sol"]-=lost_sol
 
-            text=f"""
+            with open("oper.png","rb") as photo:
+
+                bot.send_photo(
+                    m.chat.id,
+                    photo,
+                    caption=f"""
 👮 Опер Тимур Соколов
 
 Забрал часть стаффа
 
 🧊 -{lost_mef}
 🧂 -{lost_sol}
-"""
+""",
+                    reply_markup=menu()
+                )
+
+
+    p["last"]=now
+
+    save()
 
 
     # ===== ПУСТО =====
