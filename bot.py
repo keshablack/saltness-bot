@@ -628,7 +628,7 @@ def cook(m):
 
     save()
 
-    with open("var.png","rb") as photo:
+    with open("var.PNG","rb") as photo:
 
         bot.send_photo(
             m.chat.id,
