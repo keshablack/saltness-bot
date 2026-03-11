@@ -509,7 +509,7 @@ def work(m):
     # ===== ПУСТО =====
     else:
 
-        with open("images/pusto.png","rb") as photo:
+        with open("pusto.png.jpg","rb") as photo:
 
             bot.send_photo(
                 m.chat.id,
