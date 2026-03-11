@@ -90,8 +90,8 @@ def work(m):
     now=time.time()
 
     # кулдаун 10 минут
-    if now-p["last"]<600:
-        minutes=int((600-(now-p["last"]))/60)
+    if now-p["last"]<180:
+    minutes=int((180-(now-p["last"]))/60)
 
         bot.send_message(
             m.chat.id,
@@ -101,6 +101,11 @@ def work(m):
         return
 
     r=random.randint(1,100)
+    p["xp"]+=1
+    if p["xp"]>=p["lvl"]*10:
+    p["xp"]=0
+    p["lvl"]+=1
+    bot.send_message(m.chat.id,f"🎉 Новый уровень: {p['lvl']}")
 
     if r<=50:
         p["mef"]+=1
