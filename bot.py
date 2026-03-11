@@ -442,7 +442,7 @@ def work(m):
         p["mef"]+=10
         p["total"]+=10
 
-        with open("masterklad.jpg","rb") as photo:
+        with open("masterklad.PNG","rb") as photo:
 
             bot.send_photo(
                 m.chat.id,
@@ -494,7 +494,7 @@ def work(m):
         p["sol"]+=amount
         p["total"]+=amount
 
-        with open("salt.png","rb") as photo:
+        with open("salt.jpg","rb") as photo:
 
             bot.send_photo(
                 m.chat.id,
