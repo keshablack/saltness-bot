@@ -43,7 +43,15 @@ def get_player(user):
             "ref_reward":0
         }
 
+    p = players[uid]
+
+    # фикс старых игроков
+    p.setdefault("ref",None)
+    p.setdefault("refs",0)
+    p.setdefault("ref_reward",0)
+
     players[uid]["name"]=user.first_name
+
     return players[uid]
 
 
