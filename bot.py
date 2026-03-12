@@ -676,14 +676,14 @@ def lab(m):
     else:
         upgrade_text=f"💰 Апгрейд лаборатории — {prices[p['lab_lvl']]}₽"
 
-    img=images.get(p["lab_lvl"],"images/laba1.png")
+    img=images.get(p["lab_lvl"],"images/laba1.PNG")
 
     with open(img,"rb") as photo:
 
-        bot.send_photo(
-            m.chat.id,
-            photo,
-            caption=f"""
+    bot.send_photo(
+        m.chat.id,
+        photo,
+        caption=f"""
 🧪 Лаборатория Стёпы
 
 👨‍🔬 Стёпа варщик: нанят
@@ -695,8 +695,8 @@ def lab(m):
 
 {upgrade_text}
 """,
-            reply_markup=lab_menu()
-        )
+        reply_markup=lab_menu()
+    )
 
 
 bot.infinity_polling()
