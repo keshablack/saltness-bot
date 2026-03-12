@@ -44,6 +44,7 @@ def get_player(user):
             "ref":None,
             "refs":0,
             "ref_reward":0,
+            "district_time":0,
             "roulette_rub":False
         }
 
@@ -59,10 +60,10 @@ def get_player(user):
     return players[uid]
 
 districts={
-    1:{"name":"Заречье","owner":None,"income":4000},
-    2:{"name":"Центр","owner":None,"income":6000},
-    3:{"name":"Север","owner":None,"income":5000},
-    4:{"name":"Зашекснинский","owner":None,"income":7000}
+    1:{"name":"Заречье","owner":None,"income":5000,"price":75000},
+    2:{"name":"Индустриальный","owner":None,"income":5000,"price":75000},
+    3:{"name":"Северный","owner":None,"income":3000,"price":50000},
+    4:{"name":"Зашекснинский","owner":None,"income":7000,"price":100000}
 }
 
 
@@ -338,6 +339,9 @@ def sell(m):
 @bot.message_handler(func=lambda m:m.text=="🗺 Карта города")
 def city_map(m):
 
+    p=get_player(m.from_user)
+    district_income(p)
+
     text="🗺 Карта города\n\n"
 
     for i,data in districts.items():
@@ -348,10 +352,98 @@ def city_map(m):
 {i}️⃣ {data['name']}
 Владелец: {owner}
 Доход: {data['income']}₽
+Цена: {data['price']}₽
 """
 
     with open("map.jpg","rb") as photo:
         bot.send_photo(m.chat.id,photo,caption=text)
+
+
+@bot.message_handler(func=lambda m:m.text.startswith("купить"))
+def buy_district(m):
+
+    p=get_player(m.from_user)
+
+    try:
+        num=int(m.text.split()[1])
+    except:
+        bot.send_message(m.chat.id,"Напиши: купить номер_района")
+        return
+
+    if num not in districts:
+        bot.send_message(m.chat.id,"Такого района нет")
+        return
+
+    d=districts[num]
+
+    if d["owner"]:
+        bot.send_message(m.chat.id,"Район уже занят")
+        return
+
+    if p["money"]<d["price"]:
+        bot.send_message(m.chat.id,"Недостаточно денег")
+        return
+
+    p["money"]-=d["price"]
+    d["owner"]=p["name"]
+
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        f"🏙 Ты купил район {d['name']}"
+    )
+
+
+print(f"Игрок получил доход районов: {total}")
+
+
+@bot.message_handler(func=lambda m:m.text.startswith("напасть"))
+def attack_district(m):
+
+    p=get_player(m.from_user)
+
+    try:
+        num=int(m.text.split()[1])
+    except:
+        bot.send_message(m.chat.id,"Напиши: напасть номер")
+        return
+
+    if num not in districts:
+        bot.send_message(m.chat.id,"Нет такого района")
+        return
+
+    d=districts[num]
+
+    if not d["owner"]:
+        bot.send_message(m.chat.id,"Район свободен")
+        return
+
+    if p["money"]<30000:
+        bot.send_message(m.chat.id,"Нужно 30000₽ для нападения")
+        return
+
+    p["money"]-=30000
+
+    chance=random.randint(1,100)
+
+    if chance<=50:
+
+        d["owner"]=p["name"]
+
+        bot.send_message(
+            m.chat.id,
+            f"⚔ Ты захватил район {d['name']}"
+        )
+
+    else:
+
+        bot.send_message(
+            m.chat.id,
+            "💀 Нападение провалилось"
+        )
+
+    save()
 
 
 # ===== РУЛЕТКА ₽ =====
