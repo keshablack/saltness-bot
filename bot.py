@@ -249,7 +249,7 @@ def sell(m):
         return
 
 
-    tax=int(money*0.17)
+    tax=int(money*0.20)
     profit=money-tax
 
     p["money"]+=profit
