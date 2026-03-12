@@ -620,24 +620,34 @@ def mef_start(m):
     bot.send_message(m.chat.id,"🎰 Выбери число от 1 до 10")
 
 
-@bot.message_handler(func=lambda m:m.text.isdigit())
+@bot.message_handler(func=lambda m: True)
 def roulette_play(m):
 
-    p=get_player(m.from_user)
+    if not m.text:
+        return
+
+    p = get_player(m.from_user)
 
     if not p["roulette"]:
         return
 
-    num=int(m.text)
+    text = m.text.strip()
 
-    if num<1 or num>10:
+    if not text.isdigit():
+        bot.send_message(m.chat.id,"🎰 Напиши число от 1 до 10")
         return
 
-    win=random.randint(1,10)
+    num = int(text)
 
-    if num==win:
+    if num < 1 or num > 10:
+        bot.send_message(m.chat.id,"🎰 Нужно число от 1 до 10")
+        return
 
-        p["mef"]+=5
+    win = random.randint(1,10)
+
+    if num == win:
+
+        p["mef"] += 5
 
         text=f"""
 🎰 Рулетка Меф
@@ -663,8 +673,7 @@ def roulette_play(m):
 🧂 {p['sol']} соли
 """
 
-    p["roulette"]=False
-
+    p["roulette"] = False
     save()
 
     bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
