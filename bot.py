@@ -648,13 +648,10 @@ def cook(m):
         )
 
 
-@bot.message_handler(func=lambda m:m.text=="🧪 Лаборатория")
+@@bot.message_handler(func=lambda m:m.text=="🧪 Лаборатория")
 def lab(m):
 
     p=get_player(m.from_user)
-
-    bonus=p["lab_lvl"]*5
-    cooldown=p["lab_lvl"]*30
 
     prices={
         1:10000,
@@ -662,8 +659,6 @@ def lab(m):
         3:80000,
         4:250000
     }
-
-    price=prices.get(p["lab_lvl"],"MAX")
 
     images={
         1:"images/laba1.PNG",
@@ -673,12 +668,15 @@ def lab(m):
         5:"images/laba5.PNG"
     }
 
-    img=images[p["lab_lvl"]]
+    bonus=p["lab_lvl"]*5
+    cooldown=p["lab_lvl"]*30
 
     if p["lab_lvl"]>=5:
         upgrade_text="🏭 Максимальный уровень"
     else:
-        upgrade_text=f"💰 Апгрейд лаборатории — {price}₽"
+        upgrade_text=f"💰 Апгрейд лаборатории — {prices[p['lab_lvl']]}₽"
+
+    img=images.get(p["lab_lvl"],"images/laba1.png")
 
     with open(img,"rb") as photo:
 
