@@ -40,7 +40,8 @@ def get_player(user):
             "total":0,
             "ref":None,
             "refs":0,
-            "ref_reward":0
+            "ref_reward":0,
+            "roulette_rub":False
         }
 
     p = players[uid]
@@ -273,67 +274,81 @@ def rub_start(m):
 
     p=get_player(m.from_user)
 
-    if p["money"]<1000:
+    bot.send_message(
+        m.chat.id,
+        """
+🎰 Рулетка
+
+Введи ставку от 1000 до 10000 ₽
+"""
+    )
+
+    p["roulette_rub"]=True
+    save()
+
+    @bot.message_handler(func=lambda m:m.text.isdigit())
+def roulette_rub_play(m):
+
+    p=get_player(m.from_user)
+
+    if not p.get("roulette_rub"):
+        return
+
+    bet=int(m.text)
+
+    if bet<1000 or bet>10000:
 
         bot.send_message(
             m.chat.id,
-            "💸 Нужно 1000₽ для игры",
-            reply_markup=kraken_menu()
+            "⚠️ Ставка должна быть от 1000 до 10000 ₽"
         )
         return
 
-    p["money"]-=1000
-    save()
+    if p["money"]<bet:
 
-    msg=bot.send_message(m.chat.id,"🎰 Крутим рулетку...")
-
-    animation=[
-        "🎰 | 🔴 ⚫ ⚫ |",
-        "🎰 | ⚫ 🔴 ⚫ |",
-        "🎰 | ⚫ ⚫ 🔴 |",
-        "🎰 | 🔴 ⚫ ⚫ |",
-        "🎰 | ⚫ 🔴 ⚫ |"
-    ]
-
-    for frame in animation:
-
-        time.sleep(0.6)
-
-        bot.edit_message_text(
-            frame,
+        bot.send_message(
             m.chat.id,
-            msg.message_id
+            "💸 Недостаточно денег"
         )
+        return
 
-    if random.randint(1,2)==1:
+    p["roulette_rub"]=False
 
-        win=2000
-        p["money"]+=win
+    if random.random()<0.45:
 
-        result=f"""
+        win=bet*2
+        p["money"]+=bet
+
+        text=f"""
 🎰 Рулетка
 
-🎉 Ты выиграл {win}₽
+🎉 Ты выиграл!
 
-💰 Баланс: {p['money']}₽
+💰 +{bet} ₽
+
+Баланс: {p['money']} ₽
 """
 
     else:
 
-        result=f"""
+        p["money"]-=bet
+
+        text=f"""
 🎰 Рулетка
 
 😐 Ты проиграл
 
-💰 Баланс: {p['money']}₽
+💸 −{bet} ₽
+
+Баланс: {p['money']} ₽
 """
 
     save()
 
-    bot.edit_message_text(
-        result,
+    bot.send_message(
         m.chat.id,
-        msg.message_id
+        text,
+        reply_markup=kraken_menu()
     )
 
 
