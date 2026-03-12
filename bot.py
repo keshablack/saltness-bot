@@ -367,6 +367,8 @@ def sell(m):
 @bot.message_handler(func=lambda m: m.text=="🗺 Карта города")
 def city_map(m):
 
+    generate_map()
+
     text="🗺 Карта города\n\n"
 
     for i,data in districts.items():
@@ -381,7 +383,6 @@ def city_map(m):
 
 """
 
-    # команды добавляем ОДИН РАЗ после цикла
     text += """
 ⚔ Управление районами
 
@@ -389,20 +390,18 @@ def city_map(m):
 пример: купить 2
 
 💣 напасть [номер]
-стоимость атаки: 100.000₽
+стоимость атаки: 100000₽
 шанс захвата: 30%
 
 📥 доход районов начисляется каждый час
 """
+
+    with open("map_temp.jpg","rb") as photo:
         bot.send_photo(
             m.chat.id,
             photo,
             caption=text
         )
-
-    with open("map.jpg","rb") as photo:
-        bot.send_photo(m.chat.id,photo,caption=text)
-        
 
 
 @bot.message_handler(func=lambda m:m.text.startswith("купить"))
