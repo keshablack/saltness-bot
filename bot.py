@@ -572,33 +572,6 @@ def work(m):
 
 # ===== ЛАБОРАТОРИЯ =====
 
-@bot.message_handler(func=lambda m:m.text=="🧪 Лаборатория")
-def lab(m):
-
-    p=get_player(m.from_user)
-
-    bonus=p["lab_lvl"]*5
-    cooldown=p["lab_lvl"]*30
-    price=p["lab_lvl"]*5000
-
-    bot.send_message(
-        m.chat.id,
-        f"""
-🧪 Лаборатория Стёпы
-
-👨‍🔬 Стёпа варщик: нанят
-🏭 Уровень лаборатории: {p['lab_lvl']}
-
-Бонусы:
-+{bonus}% шанс мефа
-−{cooldown} сек кулдаун
-
-💰 Апгрейд лаборатории — {price}₽
-""",
-        reply_markup=lab_menu()
-    )
-
-
 @bot.message_handler(func=lambda m:m.text=="👨‍🔬 Варить")
 def cook(m):
 
