@@ -291,8 +291,8 @@ def sell(m):
     p=get_player(m.from_user)
 
     if black_market:
-        mef_price=3000
-        sol_price=1400
+        mef_price=3300
+        sol_price=1500
     else:
         mef_price=2200
         sol_price=900
