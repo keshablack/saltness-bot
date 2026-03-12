@@ -430,8 +430,8 @@ def work(m):
 
     cooldown=180-(p["lvl"]*4)-(p["lab_lvl"]*10)
 
-if cooldown<30:
-    cooldown=30
+    if cooldown<30:
+        cooldown=30
 
     if now-p["last"]<cooldown:
 
