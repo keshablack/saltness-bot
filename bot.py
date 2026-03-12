@@ -241,7 +241,7 @@ def sell(m):
 
     p=get_player(m.from_user)
 
-    money=(p["mef"]*3000)+(p["sol"]*1500)
+    money=(p["mef"]*2200)+(p["sol"]*900)
 
     if money==0:
 
