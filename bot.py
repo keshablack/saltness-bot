@@ -292,8 +292,8 @@ def broadcast(m):
 
     for uid in players:
 
-        try:
-            bot.send_message(uid, f"📢 ОБЪЯВЛЕНИЕ\n\n{text}")
+    try:
+        bot.send_message(int(uid), f"📢 ОБЪЯВЛЕНИЕ\n\n{text}")
             sent += 1
         except:
             pass
@@ -453,21 +453,17 @@ def city_map(m):
 
     generate_map()
 
-with open("map_temp.jpg","rb") as photo:
-    bot.send_photo(m.chat.id,photo,caption=text)
-
     text="🗺 Карта города\n\n"
 
     for i,data in districts.items():
 
-        owner = data["owner"] if data["owner"] else "свободно"
+        owner=data["owner"] if data["owner"] else "свободно"
 
-        text += f"""
+        text+=f"""
 {i}️⃣ {data['name']}
 Владелец: {owner}
 Доход: {data['income']}₽
 Цена: {data['price']}₽
-
 """
 
     text += """
@@ -484,6 +480,7 @@ with open("map_temp.jpg","rb") as photo:
 """
 
     with open("map_temp.jpg","rb") as photo:
+
         bot.send_photo(
             m.chat.id,
             photo,
