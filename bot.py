@@ -67,12 +67,40 @@ def check_black_market():
 
     now=time.time()
 
+    # закрытие рынка
     if black_market and now>black_market_end:
         black_market=False
 
-    if not black_market and random.randint(1,100)==1:
+        for uid in players:
+            try:
+                bot.send_message(
+                    uid,
+                    "🚫 ЧЕРНЫЙ РЫНОК ЗАКРЫТ"
+                )
+            except:
+                pass
+
+
+    # открытие рынка
+    if not black_market and random.randint(1,200)==1:
         black_market=True
         black_market_end=now+1200
+
+        for uid in players:
+            try:
+                bot.send_message(
+                    uid,
+                    """
+🕶 ЧЕРНЫЙ РЫНОК ОТКРЫТ
+
+Меф: 3000₽
+Соль: 1400₽
+
+⏱ Работает 20 минут
+"""
+                )
+            except:
+                pass
 
 
 # ===== МЕНЮ =====
