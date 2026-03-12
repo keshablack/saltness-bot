@@ -291,14 +291,14 @@ def broadcast(m):
     for uid in players:
 
         try:
-            bot.send_message(uid, text)
+            bot.send_message(uid, f"📢 ОБЪЯВЛЕНИЕ\n\n{text}")
             sent += 1
         except:
             pass
 
     bot.send_message(
         m.chat.id,
-        f"📢 Рассылка отправлена\nПолучили: {sent}"
+        f"Рассылка отправлена\nПолучили: {sent}"
     )
 
 
