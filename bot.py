@@ -55,6 +55,8 @@ def get_player(user):
     p.setdefault("refs",0)
     p.setdefault("ref_reward",0)
 
+    p.setdefault("district_time",0)
+
     players[uid]["name"]=user.first_name
 
     return players[uid]
