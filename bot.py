@@ -451,6 +451,9 @@ def city_map(m):
 
     generate_map()
 
+with open("map_temp.jpg","rb") as photo:
+    bot.send_photo(m.chat.id,photo,caption=text)
+
     text="🗺 Карта города\n\n"
 
     for i,data in districts.items():
