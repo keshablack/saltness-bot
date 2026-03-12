@@ -435,44 +435,45 @@ def district_income(p):
         print(f"Игрок получил доход районов: {total}")
 
 
-@bot.message_handler(func=lambda m:m.text.startswith("напасть"))
+@bot.message_handler(func=lambda m: m.text.startswith("напасть"))
 def attack_district(m):
 
-    p=get_player(m.from_user)
+    p = get_player(m.from_user)
 
     try:
-        num=int(m.text.split()[1])
+        num = int(m.text.split()[1])
     except:
-        bot.send_message(m.chat.id,"Напиши: напасть номер")
+        bot.send_message(m.chat.id, "Напиши: напасть номер")
         return
 
     if num not in districts:
-        bot.send_message(m.chat.id,"Нет такого района")
-        
-d=districts[num]
+        bot.send_message(m.chat.id, "Нет такого района")
+        return
 
-if d["owner"]==p["name"]:
-    bot.send_message(
-        m.chat.id,
-        "Это твой район, нападать нельзя"
-    )
-    return
+    d = districts[num]
 
-if not d["owner"]:
-    bot.send_message(m.chat.id,"Район свободен")
-    return
+    if d["owner"] == p["name"]:
+        bot.send_message(
+            m.chat.id,
+            "Это твой район, нападать нельзя"
+        )
+        return
 
-if p["money"] < 100000:
-    bot.send_message(m.chat.id, "Нужно 100000₽ для нападения")
-    return
+    if not d["owner"]:
+        bot.send_message(m.chat.id, "Район свободен")
+        return
 
-    p["money"]-=30000
+    if p["money"] < 100000:
+        bot.send_message(m.chat.id, "Нужно 100000₽ для нападения")
+        return
 
-    chance=random.randint(1,100)
+    p["money"] -= 100000
 
-    if chance<=50:
+    chance = random.randint(1, 100)
 
-        d["owner"]=p["name"]
+    if chance <= 50:
+
+        d["owner"] = p["name"]
 
         bot.send_message(
             m.chat.id,
@@ -483,7 +484,7 @@ if p["money"] < 100000:
 
         bot.send_message(
             m.chat.id,
-            "💀 Ссолевые нарики этого района впряглись, захватить не удалось"
+            "💀 Солнвые нарики этого района дали отпор"
         )
 
     save()
