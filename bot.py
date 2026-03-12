@@ -339,39 +339,43 @@ def sell(m):
         reply_markup=kraken_menu()
     )
 
-@bot.message_handler(func=lambda m:m.text=="🗺 Карта города")
+@bot.message_handler(func=lambda m: m.text=="🗺 Карта города")
 def city_map(m):
-    
-    generate_map()
-
-    p=get_player(m.from_user)
-    district_income(p)
 
     text="🗺 Карта города\n\n"
 
     for i,data in districts.items():
 
-        owner=data["owner"] if data["owner"] else "свободно"
+        owner = data["owner"] if data["owner"] else "свободно"
 
-        text+=f"""
+        text += f"""
 {i}️⃣ {data['name']}
 Владелец: {owner}
 Доход: {data['income']}₽
 Цена: {data['price']}₽
-"""
-        text += """
 
+"""
+
+    # команды добавляем ОДИН РАЗ после цикла
+    text += """
 ⚔ Управление районами
 
 💰 купить [номер]
 пример: купить 2
 
 💣 напасть [номер]
-стоимость атаки: 30000₽
+стоимость атаки: 100000₽
 пример: напасть 3
 
 📥 доход районов начисляется каждый час
 """
+
+    with open("map_temp.jpg","rb") as photo:
+        bot.send_photo(
+            m.chat.id,
+            photo,
+            caption=text
+        )
 
     with open("map_temp.jpg","rb") as photo:
         bot.send_photo(m.chat.id,photo,caption=text)
