@@ -679,7 +679,6 @@ def lab(m):
     img=images.get(p["lab_lvl"],"images/laba1.PNG")
 
     with open(img,"rb") as photo:
-
     bot.send_photo(
         m.chat.id,
         photo,
