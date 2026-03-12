@@ -648,40 +648,57 @@ def cook(m):
         )
 
 
-@bot.message_handler(func=lambda m:m.text=="⬆ Апгрейд лаборатории")
-def lab_upgrade(m):
+@bot.message_handler(func=lambda m:m.text=="🧪 Лаборатория")
+def lab(m):
 
     p=get_player(m.from_user)
 
-    price=p["lab_lvl"]*5000
+    bonus=p["lab_lvl"]*5
+    cooldown=p["lab_lvl"]*30
 
-    if p["money"]<price:
+    prices={
+        1:10000,
+        2:30000,
+        3:80000,
+        4:250000
+    }
 
-        bot.send_message(
+    price=prices.get(p["lab_lvl"],"MAX")
+
+    images={
+        1:"images/laba1.PNG",
+        2:"images/laba2.PNG",
+        3:"images/laba3.PNG",
+        4:"images/laba4.jpg",
+        5:"images/laba5.PNG"
+    }
+
+    img=images[p["lab_lvl"]]
+
+    if p["lab_lvl"]>=5:
+        upgrade_text="🏭 Максимальный уровень"
+    else:
+        upgrade_text=f"💰 Апгрейд лаборатории — {price}₽"
+
+    with open(img,"rb") as photo:
+
+        bot.send_photo(
             m.chat.id,
-            f"💸 Нужно {price}₽ для апгрейда",
+            photo,
+            caption=f"""
+🧪 Лаборатория Стёпы
+
+👨‍🔬 Стёпа варщик: нанят
+🏭 Уровень лаборатории: {p['lab_lvl']}
+
+Бонусы:
++{bonus}% шанс мефа
+−{cooldown} сек кулдаун
+
+{upgrade_text}
+""",
             reply_markup=lab_menu()
         )
-        return
-
-    p["money"]-=price
-    p["lab_lvl"]+=1
-
-    save()
-
-    bot.send_message(
-        m.chat.id,
-        f"""
-⬆ Лаборатория улучшена!
-
-🏭 Новый уровень: {p['lab_lvl']}
-
-Теперь:
-+{p['lab_lvl']*5}% шанс мефа
-−{p['lab_lvl']*30} сек кулдаун
-""",
-        reply_markup=lab_menu()
-    )
 
 
 bot.infinity_polling()
