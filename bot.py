@@ -24,6 +24,12 @@ def save():
     with open(DATA_FILE,"w") as f:
         json.dump(players,f)
 
+
+def save_districts():
+
+    with open(DISTRICT_FILE,"w") as f:
+        json.dump(districts,f)
+
 def get_player(user):
 
     uid=str(user.id)
@@ -62,37 +68,43 @@ def get_player(user):
 
     return players[uid]
 
-districts={
+try:
+    with open(DISTRICT_FILE,"r") as f:
+        districts=json.load(f)
 
-1:{
-"name":"Заречье",
-"owner":None,
-"income":10000,
-"price":225000
-},
+except:
 
-2:{
-"name":"Индустриальный",
-"owner":None,
-"income":10000,
-"price":225000
-},
+    districts={
 
-3:{
-"name":"Северный",
-"owner":None,
-"income":6000,
-"price":150000
-},
+        1:{
+        "name":"Заречье",
+        "owner":None,
+        "income":10000,
+        "price":225000
+        },
 
-4:{
-"name":"Зашекснинский",
-"owner":None,
-"income":14000,
-"price":300000
-}
+        2:{
+        "name":"Индустриальный",
+        "owner":None,
+        "income":10000,
+        "price":225000
+        },
 
-}
+        3:{
+        "name":"Северный",
+        "owner":None,
+        "income":6000,
+        "price":150000
+        },
+
+        4:{
+        "name":"Зашекснинский",
+        "owner":None,
+        "income":14000,
+        "price":300000
+        }
+
+    }
 
 
 # ===== ЧЕРНЫЙ РЫНОК =====
