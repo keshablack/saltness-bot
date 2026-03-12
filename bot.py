@@ -394,8 +394,26 @@ def buy_district(m):
         f"🏙 Ты купил район {d['name']}"
     )
 
+def district_income(p):
 
-print(f"Игрок получил доход районов: {total}")
+    now=time.time()
+
+    if now-p["district_time"]<3600:
+        return
+
+    total=0
+
+    for d in districts.values():
+
+        if d["owner"]==p["name"]:
+            total+=d["income"]
+
+    if total>0:
+
+        p["money"]+=total
+        p["district_time"]=now
+
+        print(f"Игрок получил доход районов: {total}")
 
 
 @bot.message_handler(func=lambda m:m.text.startswith("напасть"))
