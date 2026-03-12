@@ -416,7 +416,10 @@ def work(m):
 
     now=time.time()
 
-    cooldown=180-(p["lab_lvl"]*10)
+    cooldown=180-(p["lvl"]*4)-(p["lab_lvl"]*10)
+
+if cooldown<30:
+    cooldown=30
 
     if now-p["last"]<cooldown:
 
@@ -434,6 +437,25 @@ def work(m):
     amount=random.randint(1,3)
 
     p["xp"]+=1
+
+# ===== ПРОКАЧКА =====
+need=p["lvl"]*10
+
+while p["xp"]>=need:
+
+    p["xp"]-=need
+    p["lvl"]+=1
+
+    bot.send_message(
+        m.chat.id,
+        f"""
+⭐ Новый уровень!
+
+Теперь ты {p['lvl']} уровень
+
+⏱ Кулдаун шкурки уменьшен на 4 сек
+"""
+    )
 
 
     # ===== МАСТЕРКЛАД (3%) =====
