@@ -645,24 +645,15 @@ def mef_start(m):
     bot.send_message(m.chat.id,"🎰 Выбери число от 1 до 10")
 
 
-@bot.message_handler(func=lambda m: True)
+@bot.message_handler(func=lambda m: m.text and m.text.isdigit())
 def roulette_play(m):
-
-    if not m.text:
-        return
 
     p = get_player(m.from_user)
 
     if not p["roulette"]:
         return
 
-    text = m.text.strip()
-
-    if not text.isdigit():
-        bot.send_message(m.chat.id,"🎰 Напиши число от 1 до 10")
-        return
-
-    num = int(text)
+    num = int(m.text)
 
     if num < 1 or num > 10:
         bot.send_message(m.chat.id,"🎰 Нужно число от 1 до 10")
@@ -680,10 +671,6 @@ def roulette_play(m):
 🎉 Угадал число {win}
 
 🧊 +5 мефа
-
-Теперь у тебя:
-🧊 {p['mef']} мефа
-🧂 {p['sol']} соли
 """
 
     else:
@@ -692,10 +679,6 @@ def roulette_play(m):
 🎰 Рулетка Меф
 
 😐 Выпало число {win}
-
-📦 У тебя осталось:
-🧊 {p['mef']} мефа
-🧂 {p['sol']} соли
 """
 
     p["roulette"] = False
