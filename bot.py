@@ -12,6 +12,8 @@ black_market_end=0
 TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
+ADMIN_ID = 7740504336
+
 DATA_FILE = os.getenv("DATA_FILE","players.json")
 
 try:
@@ -120,13 +122,20 @@ def check_black_market():
         black_market=False
 
         for uid in players:
-            try:
-                bot.send_message(
-                    uid,
-                    "🚫 ЧЕРНЫЙ РЫНОК ЗАКРЫТ"
-                )
-            except:
-                pass
+    try:
+        bot.send_message(
+            uid,
+            "🚫 <b>ЧЁРНЫЙ РЫНОК</b>\n"
+            "━━━━━━━━━━━━━━\n"
+            "Сейчас рынок закрыт.\n\n"
+            "⏳ Жди следующего открытия.\n\n"
+            "А пока… шкурь клады.\n"
+            "Когда рынок откроется —\n"
+            "ты сможешь продать стафф\n"
+            "💰 <b>без комиссии</b>."
+        , parse_mode="HTML")
+    except:
+        pass
 
 
     # открытие рынка
@@ -263,6 +272,67 @@ XP: {p['xp']}/{p['lvl']*10}
 """,
         reply_markup=menu()
     )
+
+
+@bot.message_handler(commands=["bc"])
+def broadcast(m):
+
+    if m.from_user.id != ADMIN_ID:
+        return
+
+    text = m.text.replace("/bc","").strip()
+
+    if not text:
+        bot.send_message(m.chat.id,"Напиши сообщение после /bc")
+        return
+
+    sent = 0
+
+    for uid in players:
+
+        try:
+            bot.send_message(uid, text)
+            sent += 1
+        except:
+            pass
+
+    bot.send_message(
+        m.chat.id,
+        f"📢 Рассылка отправлена\nПолучили: {sent}"
+    )
+
+
+@bot.message_handler(commands=["givemoney"])
+def give_money(m):
+
+    if m.from_user.id != ADMIN_ID:
+        return
+
+    args = m.text.split()
+
+    if len(args) < 3:
+        bot.send_message(
+            m.chat.id,
+            "Использование:\n/givemoney id сумма"
+        )
+        return
+
+    uid = args[1]
+    amount = int(args[2])
+
+    if uid not in players:
+        bot.send_message(m.chat.id,"Игрок не найден")
+        return
+
+    players[uid]["money"] += amount
+
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        f"💰 Выдано {amount}₽ игроку {players[uid]['name']}"
+    )
+
 
 
 # ===== ТОП =====
