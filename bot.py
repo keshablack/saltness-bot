@@ -462,8 +462,8 @@ if not d["owner"]:
     bot.send_message(m.chat.id,"Район свободен")
     return
 
-if p["money"]<30000:
-    bot.send_message(m.chat.id,"Нужно 30000₽ для нападения")
+if p["money"] < 100000:
+    bot.send_message(m.chat.id, "Нужно 100000₽ для нападения")
     return
 
     p["money"]-=30000
@@ -483,7 +483,7 @@ if p["money"]<30000:
 
         bot.send_message(
             m.chat.id,
-            "💀 Нападение провалилось"
+            "💀 Ссолевые нарики этого района впряглись, захватить не удалось"
         )
 
     save()
