@@ -248,7 +248,11 @@ def sell(m):
         bot.send_message(m.chat.id,"Нечего продавать",reply_markup=kraken_menu())
         return
 
-    p["money"]+=money
+
+    tax=int(money*0.10)
+    profit=money-tax
+
+    p["money"]+=profit
     p["mef"]=0
     p["sol"]=0
 
@@ -257,11 +261,12 @@ def sell(m):
     bot.send_message(
         m.chat.id,
         f"""
-💰 Продажа
+💰 Продажа стаффа
 
-Ты получил {money}₽
+Цена: {money}₽
+Комиссия кракена: {tax}₽
 
-Баланс: {p['money']}₽
+Ты получил: {profit}₽
 """,
         reply_markup=kraken_menu()
     )
