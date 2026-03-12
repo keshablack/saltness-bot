@@ -1005,5 +1005,12 @@ def lab(m):
             reply_markup=lab_menu()
         )
 
+import threading
 
+def market_loop():
+    while True:
+        check_black_market()
+        time.sleep(10)
+
+threading.Thread(target=market_loop).start()
 bot.infinity_polling()
