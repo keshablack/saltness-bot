@@ -621,6 +621,54 @@ def cook(m):
         )
 
 
+@@bot.message_handler(func=lambda m:"Апгрейд лаборатории" in m.text)
+def lab_upgrade(m):
+
+    p=get_player(m.from_user)
+
+    prices={
+        1:10000,
+        2:30000,
+        3:80000,
+        4:250000
+    }
+
+    if p["lab_lvl"]>=5:
+
+        bot.send_message(
+            m.chat.id,
+            "🏭 Лаборатория уже максимального уровня",
+            reply_markup=lab_menu()
+        )
+        return
+
+    price=prices[p["lab_lvl"]]
+
+    if p["money"]<price:
+
+        bot.send_message(
+            m.chat.id,
+            f"💸 Нужно {price}₽ для апгрейда",
+            reply_markup=lab_menu()
+        )
+        return
+
+    p["money"]-=price
+    p["lab_lvl"]+=1
+
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        f"""
+⬆ Лаборатория улучшена!
+
+🏭 Новый уровень: {p['lab_lvl']}
+""",
+        reply_markup=lab_menu()
+    )
+
+
 @bot.message_handler(func=lambda m:m.text=="🧪 Лаборатория")
 def lab(m):
 
