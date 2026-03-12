@@ -125,7 +125,7 @@ def check_black_market():
         for uid in players:
     try:
         bot.send_message(
-            uid,
+            int(uid),
             "🚫 <b>ЧЁРНЫЙ РЫНОК</b>\n"
             "━━━━━━━━━━━━━━\n"
             "Сейчас рынок закрыт.\n\n"
@@ -133,8 +133,9 @@ def check_black_market():
             "А пока… шкурь клады.\n"
             "Когда рынок откроется —\n"
             "ты сможешь продать стафф\n"
-            "💰 <b>без комиссии</b>."
-        , parse_mode="HTML")
+            "💰 <b>без комиссии</b>.",
+            parse_mode="HTML"
+        )
     except:
         pass
 
