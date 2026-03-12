@@ -1,3 +1,4 @@
+from PIL import Image, ImageDraw
 import telebot
 import random
 import time
@@ -340,6 +341,8 @@ def sell(m):
 
 @bot.message_handler(func=lambda m:m.text=="🗺 Карта города")
 def city_map(m):
+    
+    generate_map()
 
     p=get_player(m.from_user)
     district_income(p)
@@ -357,7 +360,7 @@ def city_map(m):
 Цена: {data['price']}₽
 """
 
-    with open("map.jpg","rb") as photo:
+    with open("map_temp.jpg","rb") as photo:
         bot.send_photo(m.chat.id,photo,caption=text)
 
 
@@ -464,6 +467,30 @@ def attack_district(m):
         )
 
     save()
+
+
+def generate_map():
+
+    img = Image.open("map.jpg")
+    draw = ImageDraw.Draw(img)
+
+    areas = {
+        1: [(550,650),(850,650),(850,900),(550,900)],
+        2: [(500,450),(800,450),(800,650),(500,650)],
+        3: [(800,250),(1050,250),(1050,450),(800,450)],
+        4: [(1050,450),(1350,450),(1350,700),(1050,700)]
+    }
+
+    for i, d in districts.items():
+
+        if d["owner"]:
+
+            draw.polygon(
+                areas[i],
+                fill=(255,0,0,120)
+            )
+
+    img.save("map_temp.jpg")
 
 
 # ===== РУЛЕТКА ₽ =====
