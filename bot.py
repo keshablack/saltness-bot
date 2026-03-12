@@ -450,24 +450,24 @@ def work(m):
 
     p["xp"]+=1
 
-# ===== ПРОКАЧКА =====
-need=p["lvl"]*10
+    # ===== ПРОКАЧКА =====
+    need=p["lvl"]*10
 
-while p["xp"]>=need:
+    if p["xp"]>=need:
 
-    p["xp"]-=need
-    p["lvl"]+=1
+        p["xp"]-=need
+        p["lvl"]+=1
 
-    bot.send_message(
-        m.chat.id,
-        f"""
+        bot.send_message(
+            m.chat.id,
+            f"""
 ⭐ Новый уровень!
 
 Теперь ты {p['lvl']} уровень
 
 ⏱ Кулдаун шкурки уменьшен на 4 сек
 """
-    )
+        )
 
 
     # ===== МАСТЕРКЛАД (3%) =====
