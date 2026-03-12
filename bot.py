@@ -621,7 +621,7 @@ def cook(m):
         )
 
 
-@@bot.message_handler(func=lambda m:"Апгрейд лаборатории" in m.text)
+@bot.message_handler(func=lambda m: "Апгрейд лаборатории" in m.text if m.text else False)
 def lab_upgrade(m):
 
     p=get_player(m.from_user)
