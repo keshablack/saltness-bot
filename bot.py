@@ -448,24 +448,23 @@ def attack_district(m):
 
     if num not in districts:
         bot.send_message(m.chat.id,"Нет такого района")
-        return
-
-    d=districts[num]
+        
+d=districts[num]
 
 if d["owner"]==p["name"]:
     bot.send_message(
         m.chat.id,
-        "Это твой район, гений. Нападать на себя нельзя."
+        "Это твой район, нападать нельзя"
     )
     return
 
-    if not d["owner"]:
-        bot.send_message(m.chat.id,"Район свободен")
-        return
+if not d["owner"]:
+    bot.send_message(m.chat.id,"Район свободен")
+    return
 
-    if p["money"]<30000:
-        bot.send_message(m.chat.id,"Нужно 30000₽ для нападения")
-        return
+if p["money"]<30000:
+    bot.send_message(m.chat.id,"Нужно 30000₽ для нападения")
+    return
 
     p["money"]-=30000
 
