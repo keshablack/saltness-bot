@@ -5,6 +5,9 @@ import json
 from telebot.types import ReplyKeyboardMarkup
 import os
 
+black_market=False
+black_market_end=0
+
 TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
@@ -54,6 +57,22 @@ def get_player(user):
     players[uid]["name"]=user.first_name
 
     return players[uid]
+
+
+# ===== ЧЕРНЫЙ РЫНОК =====
+def check_black_market():
+
+    global black_market
+    global black_market_end
+
+    now=time.time()
+
+    if black_market and now>black_market_end:
+        black_market=False
+
+    if not black_market and random.randint(1,100)==1:
+        black_market=True
+        black_market_end=now+1200
 
 
 # ===== МЕНЮ =====
@@ -239,9 +258,18 @@ def ref_link(m):
 @bot.message_handler(func=lambda m:m.text=="💰 Продать стафф")
 def sell(m):
 
+    check_black_market()
+
     p=get_player(m.from_user)
 
-    money=(p["mef"]*2200)+(p["sol"]*900)
+    if black_market:
+        mef_price=3000
+        sol_price=1400
+    else:
+        mef_price=2200
+        sol_price=900
+
+    money=(p["mef"]*mef_price)+(p["sol"]*sol_price)
 
     if money==0:
 
