@@ -63,10 +63,35 @@ def get_player(user):
     return players[uid]
 
 districts={
-    1:{"name":"Заречье","owner":None,"income":5000,"price":75000},
-    2:{"name":"Индустриальный","owner":None,"income":5000,"price":75000},
-    3:{"name":"Северный","owner":None,"income":3000,"price":50000},
-    4:{"name":"Зашекснинский","owner":None,"income":7000,"price":100000}
+
+1:{
+"name":"Заречье",
+"owner":None,
+"income":10000,
+"price":225000
+},
+
+2:{
+"name":"Индустриальный",
+"owner":None,
+"income":10000,
+"price":225000
+},
+
+3:{
+"name":"Северный",
+"owner":None,
+"income":6000,
+"price":150000
+},
+
+4:{
+"name":"Зашекснинский",
+"owner":None,
+"income":14000,
+"price":300000
+}
+
 }
 
 
@@ -364,8 +389,8 @@ def city_map(m):
 пример: купить 2
 
 💣 напасть [номер]
-стоимость атаки: 100000₽
-пример: напасть 3
+стоимость атаки: 100.000₽
+шанс захвата: 30%
 
 📥 доход районов начисляется каждый час
 """
@@ -475,7 +500,7 @@ def attack_district(m):
 
     chance = random.randint(1, 100)
 
-    if chance <= 50:
+    if chance <= 30:
 
         d["owner"] = p["name"]
 
