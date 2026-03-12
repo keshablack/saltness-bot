@@ -370,7 +370,7 @@ def city_map(m):
 📥 доход районов начисляется каждый час
 """
 
-    with open("map_temp.jpg","rb") as photo:
+    with open("map.jpg","rb") as photo:
         bot.send_photo(
             m.chat.id,
             photo,
