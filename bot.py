@@ -276,17 +276,14 @@ def rub_start(m):
 
     bot.send_message(
         m.chat.id,
-        """
-🎰 Рулетка
-
-Введи ставку от 1000 до 10000 ₽
-"""
+        "🎰 Введи ставку от 1000 до 10000"
     )
 
     p["roulette_rub"]=True
     save()
 
-    @bot.message_handler(func=lambda m:m.text.isdigit())
+
+@bot.message_handler(func=lambda m:m.text.isdigit())
 def roulette_rub_play(m):
 
     p=get_player(m.from_user)
