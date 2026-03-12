@@ -249,7 +249,7 @@ def sell(m):
         return
 
 
-    tax=int(money*0.10)
+    tax=int(money*0.17)
     profit=money-tax
 
     p["money"]+=profit
@@ -263,7 +263,7 @@ def sell(m):
         f"""
 💰 Продажа стаффа
 
-Цена: {money}₽
+Выгрузил клады на: {money}₽
 Комиссия кракена: {tax}₽
 
 Ты получил: {profit}₽
