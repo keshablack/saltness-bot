@@ -359,9 +359,23 @@ def city_map(m):
 Доход: {data['income']}₽
 Цена: {data['price']}₽
 """
+        text += """
+
+⚔ Управление районами
+
+💰 купить [номер]
+пример: купить 2
+
+💣 напасть [номер]
+стоимость атаки: 30000₽
+пример: напасть 3
+
+📥 доход районов начисляется каждый час
+"""
 
     with open("map_temp.jpg","rb") as photo:
         bot.send_photo(m.chat.id,photo,caption=text)
+        
 
 
 @bot.message_handler(func=lambda m:m.text.startswith("купить"))
@@ -437,6 +451,13 @@ def attack_district(m):
         return
 
     d=districts[num]
+
+if d["owner"]==p["name"]:
+    bot.send_message(
+        m.chat.id,
+        "Это твой район, гений. Нападать на себя нельзя."
+    )
+    return
 
     if not d["owner"]:
         bot.send_message(m.chat.id,"Район свободен")
