@@ -58,6 +58,13 @@ def get_player(user):
 
     return players[uid]
 
+districts={
+    1:{"name":"Заречье","owner":None,"income":4000},
+    2:{"name":"Центр","owner":None,"income":6000},
+    3:{"name":"Север","owner":None,"income":5000},
+    4:{"name":"Зашекснинский","owner":None,"income":7000}
+}
+
 
 # ===== ЧЕРНЫЙ РЫНОК =====
 def check_black_market():
@@ -112,6 +119,7 @@ def menu():
     kb.row("🧪 Шкурить")
     kb.row("📦 Инвентарь","🐙 Кракен")
     kb.row("🧪 Лаборатория","🏆 Топ")
+    kb.add("🗺 Карта города")
 
     return kb
 
@@ -326,6 +334,24 @@ def sell(m):
 """,
         reply_markup=kraken_menu()
     )
+
+@bot.message_handler(func=lambda m:m.text=="🗺 Карта города")
+def city_map(m):
+
+    text="🗺 Карта города\n\n"
+
+    for i,data in districts.items():
+
+        owner=data["owner"] if data["owner"] else "свободно"
+
+        text+=f"""
+{i}️⃣ {data['name']}
+Владелец: {owner}
+Доход: {data['income']}₽
+"""
+
+    with open("map.jpg","rb") as photo:
+        bot.send_photo(m.chat.id,photo,caption=text)
 
 
 # ===== РУЛЕТКА ₽ =====
