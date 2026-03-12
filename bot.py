@@ -469,8 +469,8 @@ def work(m):
 """
         )
 
-p["last"]=now
-save()
+        p["last"]=now
+        save()
 
     # ===== МАСТЕРКЛАД (3%) =====
     if r<=3:
