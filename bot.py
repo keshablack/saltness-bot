@@ -118,8 +118,8 @@ def check_black_market():
 
     now=time.time()
 
-    # закрытие рынка
-   if black_market and now > black_market_end:
+# закрытие рынка
+if black_market and now > black_market_end:
     black_market = False
 
     for uid in players:
