@@ -9,6 +9,8 @@ import os
 black_market=False
 black_market_end=0
 
+used_promos = {}
+
 TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
@@ -55,6 +57,7 @@ def get_player(user):
             "refs":0,
             "ref_reward":0,
             "district_time":0,
+            "promos":[],
             "roulette_rub":False
         }
 
@@ -358,7 +361,57 @@ def top(m):
     for i,p in enumerate(top_refs,1):
         text += f"{i}. {p['name']} — {p.get('refs',0)} друзей\n"
 
-    bot.send_message(m.chat.id, text, reply_markup=menu())
+@bot.message_handler(commands=["promo"])
+def promo(m):
+
+    p = get_player(m.from_user)
+    uid = str(m.from_user.id)
+
+    args = m.text.split()
+
+    if len(args) < 2:
+        bot.send_message(m.chat.id,"Использование:\n/promo код")
+        return
+
+    code = args[1]
+
+    promos = {
+        "SORRY": {
+            "money":9999,
+            "mef":10,
+            "sol":15
+        }
+    }
+
+    if code not in promos:
+        bot.send_message(m.chat.id,"❌ Такого промокода нет")
+        return
+
+    if uid in used_promos.get(code,[]):
+        bot.send_message(m.chat.id,"❌ Ты уже использовал этот промокод")
+        return
+
+    reward = promos[code]
+
+    p["money"] += reward["money"]
+    p["mef"] += reward["mef"]
+    p["sol"] += reward["sol"]
+
+    used_promos.setdefault(code,[]).append(uid)
+
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        f"""
+🎁 ПРОМОКОД АКТИВИРОВАН
+
+💰 +{reward['money']}₽
+🧊 +{reward['mef']} мефа
+🧂 +{reward['sol']} соли
+"""
+    )
+
 
 
 # ===== КРАКЕН =====
