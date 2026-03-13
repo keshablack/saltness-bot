@@ -520,6 +520,7 @@ def buy_district(m):
     d["owner"]=p["name"]
 
     save()
+    save_districts()
 
     bot.send_message(
         m.chat.id,
@@ -601,6 +602,7 @@ def attack_district(m):
         )
 
     save()
+    save_districts()
 
 
 def generate_map():
