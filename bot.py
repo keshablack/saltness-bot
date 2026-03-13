@@ -120,7 +120,7 @@ def check_black_market():
 
     # закрытие рынка
     if black_market and now>black_market_end:
-    black_market=False
+        black_market=False
 
     for uid in players:
         try:
