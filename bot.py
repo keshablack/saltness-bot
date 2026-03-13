@@ -116,40 +116,43 @@ def check_black_market():
     global black_market
     global black_market_end
 
-    now=time.time()
+    now = time.time()
 
-# закрытие рынка
-if black_market and now > black_market_end:
-    black_market = False
+    # закрытие рынка
+    if black_market and now > black_market_end:
 
-    for uid in players:
-        try:
-            bot.send_message(
-                int(uid),
-                "🚫 <b>ЧЁРНЫЙ РЫНОК</b>\n"
-                "━━━━━━━━━━━━━━\n"
-                "Сейчас рынок закрыт.\n\n"
-                "⏳ Жди следующего открытия.\n\n"
-                "А пока… шкурь клады.\n"
-                "Когда рынок откроется —\n"
-                "ты сможешь продать стафф\n"
-                "💰 <b>без комиссии</b>.",
-                parse_mode="HTML"
-            )
-        except:
-            pass
-
-    return
-    
-    # открытие рынка
-    if not black_market and random.randint(1,200)==1:
-        black_market=True
-        black_market_end=now+1200
+        black_market = False
 
         for uid in players:
             try:
                 bot.send_message(
-                    uid,
+                    int(uid),
+                    "🚫 <b>ЧЁРНЫЙ РЫНОК</b>\n"
+                    "━━━━━━━━━━━━━━\n"
+                    "Сейчас рынок закрыт.\n\n"
+                    "⏳ Жди следующего открытия.\n\n"
+                    "А пока… шкурь клады.\n"
+                    "Когда рынок откроется —\n"
+                    "ты сможешь продать стафф\n"
+                    "💰 <b>без комиссии</b>.",
+                    parse_mode="HTML"
+                )
+            except:
+                pass
+
+        return
+
+
+    # открытие рынка
+    if not black_market and random.randint(1,200) == 1:
+
+        black_market = True
+        black_market_end = now + 1200
+
+        for uid in players:
+            try:
+                bot.send_message(
+                    int(uid),
                     """
 🕶 ЧЕРНЫЙ РЫНОК ОТКРЫТ
 
