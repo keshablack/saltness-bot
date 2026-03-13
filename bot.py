@@ -80,8 +80,9 @@ try:
 
 except:
 
-    districts={
+    print("districts.json не найден, создаём новый")
 
+    districts={
         1:{
         "name":"Заречье",
         "owner":None,
@@ -109,8 +110,9 @@ except:
         "income":14000,
         "price":300000
         }
-
     }
+
+    save_districts()
 
 
 # ===== ЧЕРНЫЙ РЫНОК =====
