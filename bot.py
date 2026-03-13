@@ -119,11 +119,8 @@ def check_black_market():
     now=time.time()
 
     # закрытие рынка
-    if black_market and now>black_market_end:
-    black_market=False
-
-х    for uid in players:
-        ...
+   if black_market and now > black_market_end:
+    black_market = False
 
     for uid in players:
         try:
@@ -142,6 +139,7 @@ def check_black_market():
         except:
             pass
 
+    return
     # открытие рынка
     if not black_market and random.randint(1,200)==1:
         black_market=True
