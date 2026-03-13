@@ -396,7 +396,7 @@ def promo(m):
         bot.send_message(m.chat.id,"❌ Такого промокода нет")
         return
 
-    if uid in used_promos.get(code,[]):
+    if code in p["promos"]:
         bot.send_message(m.chat.id,"❌ Ты уже использовал этот промокод")
         return
 
@@ -406,7 +406,7 @@ def promo(m):
     p["mef"] += reward["mef"]
     p["sol"] += reward["sol"]
 
-    used_promos.setdefault(code,[]).append(uid)
+    p["promos"].append(code)
 
     save()
 
