@@ -358,8 +358,14 @@ def top(m):
 
     text += "\n👥 Топ рефералов\n\n"
 
-    for i,p in enumerate(top_refs,1):
-        text += f"{i}. {p['name']} — {p.get('refs',0)} друзей\n"
+for i,p in enumerate(top_refs,1):
+    text += f"{i}. {p['name']} — {p.get('refs',0)} друзей\n"
+
+bot.send_message(
+    m.chat.id,
+    text,
+    reply_markup=menu()
+) 
 
 @bot.message_handler(commands=["promo"])
 def promo(m):
