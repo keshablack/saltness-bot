@@ -140,6 +140,7 @@ if black_market and now > black_market_end:
             pass
 
     return
+    
     # открытие рынка
     if not black_market and random.randint(1,200)==1:
         black_market=True
