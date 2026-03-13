@@ -378,7 +378,7 @@ def promo(m):
     promos = {
         "SORRY": {
             "money":9999,
-            "mef":10,
+            "mef":5,
             "sol":15
         }
     }
@@ -404,7 +404,7 @@ def promo(m):
     bot.send_message(
         m.chat.id,
         f"""
-🎁 ПРОМОКОД АКТИВИРОВАН
+🎁 ВАШ СОЛЕВОЙ ДРУГ НА ШИЗЕ ПОДУМАЛ ЧТО ВЫ МЕНТ, ВЫПРЫГНУЛ В ОКНО ОСТАВИВ БАБКИ И СТАФФ
 
 💰 +{reward['money']}₽
 🧊 +{reward['mef']} мефа
