@@ -727,7 +727,9 @@ def generate_map():
 
 # ===== РУЛЕТКА ₽ =====
 
-@bot.message_handler(func=lambda m: m.text and m.text.replace("-", "").isdigit())
+# ===== РУЛЕТКИ =====
+
+@bot.message_handler(func=lambda m: m.text and m.text.isdigit() and (get_player(m.from_user).get("roulette") or get_player(m.from_user).get("roulette_rub")))
 def roulette_handler(m):
 
     p = get_player(m.from_user)
@@ -743,9 +745,7 @@ def roulette_handler(m):
         win = random.randint(1,10)
 
         if num == win:
-
             p["mef"] += 5
-
             text=f"""
 🎰 Рулетка Меф
 
@@ -753,9 +753,7 @@ def roulette_handler(m):
 
 🧊 +5 мефа
 """
-
         else:
-
             text=f"""
 🎰 Рулетка Меф
 
