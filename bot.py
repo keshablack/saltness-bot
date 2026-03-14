@@ -725,18 +725,17 @@ def generate_map():
     img.save("map_temp.jpg")
 
 
-# ===== РУЛЕТКА ₽ =====
-
 # ===== РУЛЕТКИ =====
 
-@bot.message_handler(func=lambda m: m.text and m.text.isdigit() and (get_player(m.from_user).get("roulette") or get_player(m.from_user).get("roulette_rub")))
-def roulette_handler(m):
+@bot.message_handler(func=lambda m: True)
+def universal_handler(m):
 
     p = get_player(m.from_user)
-    num = int(m.text)
 
-    # 🧊 РУЛЕТКА МЕФ
-    if p.get("roulette"):
+    # ----- РУЛЕТКА МЕФ -----
+    if p.get("roulette") and m.text.isdigit():
+
+        num = int(m.text)
 
         if num < 1 or num > 10:
             bot.send_message(m.chat.id,"🎰 Нужно число от 1 до 10")
@@ -767,10 +766,10 @@ def roulette_handler(m):
         return
 
 
-    # 🎰 РУЛЕТКА ₽
-    if p.get("roulette_rub"):
+    # ----- РУЛЕТКА ₽ -----
+    if p.get("roulette_rub") and m.text.isdigit():
 
-        bet = num
+        bet = int(m.text)
 
         if bet < 1000 or bet > 10000:
             bot.send_message(m.chat.id,"⚠️ Ставка должна быть от 1000 до 10000 ₽")
@@ -783,38 +782,28 @@ def roulette_handler(m):
         p["roulette_rub"] = False
 
         if random.random() < 0.45:
-
             p["money"] += bet
-
             text=f"""
 🎰 Рулетка
 
 🎉 Ты выиграл!
 
 💰 +{bet} ₽
-
-Баланс: {p['money']} ₽
 """
-
         else:
-
             p["money"] -= bet
-
             text=f"""
 🎰 Рулетка
 
 😐 Ты проиграл
 
 💸 −{bet} ₽
-
-Баланс: {p['money']} ₽
 """
 
         save()
 
         bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
-
-
+        return
 
 # ===== ШКУРКА =====
 
