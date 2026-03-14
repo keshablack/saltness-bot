@@ -727,11 +727,8 @@ def generate_map():
 
 # ===== РУЛЕТКА ₽ =====
 
-@bot.message_handler(func=lambda m: m.text)
+@bot.message_handler(func=lambda m: m.text and m.text.replace("-", "").isdigit())
 def roulette_handler(m):
-
-    if not m.text.isdigit():
-        return
 
     p = get_player(m.from_user)
     num = int(m.text)
