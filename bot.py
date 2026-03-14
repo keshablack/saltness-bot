@@ -77,6 +77,7 @@ def get_player(user):
 try:
     with open(DISTRICT_FILE,"r") as f:
         districts=json.load(f)
+        districts = {int(k): v for k,v in districts.items()}
 
 except:
 
@@ -667,9 +668,11 @@ def attack_district(m):
     save_districts()
 
 
+BASE_MAP = Image.open("map.jpg")
+
 def generate_map():
 
-    img = Image.open("map.jpg")
+    img = BASE_MAP.copy()
     draw = ImageDraw.Draw(img)
 
     areas = {
@@ -710,11 +713,13 @@ def generate_map():
 
     for i, d in districts.items():
 
+        i=int(i)
+
         if d["owner"]:
 
             draw.polygon(
                 areas[i],
-                fill=(255,0,0,120)
+                fill=(255,0,0)
             )
 
     img.save("map_temp.jpg")
@@ -740,6 +745,9 @@ def rub_start(m):
 def roulette_rub_play(m):
 
     p=get_player(m.from_user)
+
+    if p.get("roulette"):
+        return
 
     if not p.get("roulette_rub"):
         return
@@ -1206,5 +1214,5 @@ def market_loop():
         check_black_market()
         time.sleep(10)
 
-threading.Thread(target=market_loop).start()
-bot.infinity_polling()
+threading.Thread(target=market_loop, daemon=True).start()
+bot.infinity_polling(skip_pending=True)
