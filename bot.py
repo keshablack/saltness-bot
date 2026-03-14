@@ -727,25 +727,47 @@ def generate_map():
 
 # ===== РУЛЕТКА ₽ =====
 
-@bot.message_handler(func=lambda m:m.text=="🎰 Рулетка ₽")
-def rub_start(m):
-
-    p=get_player(m.from_user)
-
-    bot.send_message(
-        m.chat.id,
-        "🎰 Введи ставку от 1000 до 10000"
-    )
-
-    p["roulette_rub"]=True
-    save()
-
-
 @bot.message_handler(func=lambda m: m.text and m.text.isdigit())
 def roulette_handler(m):
 
     p = get_player(m.from_user)
     num = int(m.text)
+
+    # 🧊 РУЛЕТКА МЕФ
+    if p.get("roulette"):
+
+        if num < 1 or num > 10:
+            bot.send_message(m.chat.id,"🎰 Нужно число от 1 до 10")
+            return
+
+        win = random.randint(1,10)
+
+        if num == win:
+
+            p["mef"] += 5
+
+            text=f"""
+🎰 Рулетка Меф
+
+🎉 Угадал число {win}
+
+🧊 +5 мефа
+"""
+
+        else:
+
+            text=f"""
+🎰 Рулетка Меф
+
+😐 Выпало число {win}
+"""
+
+        p["roulette"] = False
+        save()
+
+        bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
+        return
+
 
     # 🎰 РУЛЕТКА ₽
     if p.get("roulette_rub"):
@@ -792,43 +814,7 @@ def roulette_handler(m):
 
         save()
 
-        bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
-        return
-
-
-    # 🧊 РУЛЕТКА МЕФ
-    if p.get("roulette"):
-
-        if num < 1 or num > 10:
-            bot.send_message(m.chat.id,"🎰 Нужно число от 1 до 10")
-            return
-
-        win = random.randint(1,10)
-
-        if num == win:
-
-            p["mef"] += 5
-
-            text=f"""
-🎰 Рулетка Меф
-
-🎉 Угадал число {win}
-
-🧊 +5 мефа
-"""
-
-        else:
-
-            text=f"""
-🎰 Рулетка Меф
-
-😐 Выпало число {win}
-"""
-
-        p["roulette"] = False
-        save()
-
-        bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
+        bot.send_message(m.chat.id,text,reply_markup=kraken_menu())_
 
 
 
