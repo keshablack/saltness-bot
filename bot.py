@@ -762,7 +762,7 @@ def roulette_mef_play(m):
 
 
     # ----- РУЛЕТКА ₽ -----
-    @bot.message_handler(func=lambda m: m.text and m.text.isdigit() and get_player(m.from_user).get("roulette_rub"))
+@bot.message_handler(func=lambda m: m.text and m.text.isdigit() and get_player(m.from_user).get("roulette_rub"))
 def roulette_rub_play(m):
 
     p = get_player(m.from_user)
