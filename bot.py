@@ -814,7 +814,7 @@ def roulette_handler(m):
 
         save()
 
-        bot.send_message(m.chat.id,text,reply_markup=kraken_menu())_
+        bot.send_message(m.chat.id,text,reply_markup=kraken_menu())
 
 
 
