@@ -586,22 +586,22 @@ def buy_district(m):
 
 def district_income(p):
 
-    now=time.time()
+    now = time.time()
 
-    if now-p["district_time"]<3600:
+    if now - p["district_time"] < 3600:
         return
 
-    total=0
+    total = 0
 
     for d in districts.values():
 
-        if d["owner"]==str(m.from_user.id):
-            total+=d["income"]
+        if d["owner"] == str(p["id"]):
+            total += d["income"]
 
-    if total>0:
+    if total > 0:
 
-        p["money"]+=total
-        p["district_time"]=now
+        p["money"] += total
+        p["district_time"] = now
 
         print(f"Игрок получил доход районов: {total}")
 
