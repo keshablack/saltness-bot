@@ -17,7 +17,7 @@ bot = telebot.TeleBot(TOKEN)
 ADMIN_ID = 7740504336
 
 DATA_FILE = os.getenv("DATA_FILE","players.json")
-DISTRICT_FILE = "data/districts.json"
+DISTRICT_FILE = os.getenv("DISTRICT_FILE","data/districts.json")
 
 import os
 os.makedirs("data", exist_ok=True)
