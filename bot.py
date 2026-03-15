@@ -17,7 +17,7 @@ bot = telebot.TeleBot(TOKEN)
 ADMIN_ID = 7740504336
 
 DATA_FILE = os.getenv("DATA_FILE","players.json")
-DISTRICT_FILE = "districts.json"
+DISTRICT_FILE = "data/districts.json"
 
 try:
     with open(DATA_FILE,"r") as f:
