@@ -523,7 +523,7 @@ def city_map(m):
 
     for i,data in districts.items():
 
-        owner=data["owner"] if data["owner"] else "свободно"
+        owner=players.get(data["owner"],{}).get("name","свободно") if data["owner"] else "свободно"
 
         text+=f"""
 {i}️⃣ {data['name']}
@@ -580,7 +580,7 @@ def buy_district(m):
         return
 
     p["money"]-=d["price"]
-    d["owner"]=p["name"]
+    d["owner"]=str(m.from_user.id)
 
     save()
     save_districts()
@@ -601,7 +601,7 @@ def district_income(p):
 
     for d in districts.values():
 
-        if d["owner"]==p["name"]:
+        if d["owner"]==str(m.from_user.id):
             total+=d["income"]
 
     if total>0:
@@ -629,7 +629,7 @@ def attack_district(m):
 
     d = districts[num]
 
-    if d["owner"] == p["name"]:
+    if d["owner"] == str(m.from_user.id):
         bot.send_message(
             m.chat.id,
             "Это твой район, нападать нельзя"
@@ -726,6 +726,26 @@ def generate_map():
 
 
 # ===== РУЛЕТКИ =====
+
+@bot.message_handler(func=lambda m:m.text=="🎰 Рулетка ₽")
+def rub_start(m):
+    p=get_player(m.from_user)
+    bot.send_message(m.chat.id,"🎰 Введи ставку от 1000 до 10000")
+    p["roulette_rub"]=True
+    save()
+
+
+@bot.message_handler(func=lambda m:m.text=="🧊 Рулетка Меф")
+def mef_start(m):
+    p=get_player(m.from_user)
+    if p["money"]<1500:
+        bot.send_message(m.chat.id,"💸 Нужно 1500₽",reply_markup=kraken_menu())
+        return
+    p["money"]-=1500
+    p["roulette"]=True
+    save()
+    bot.send_message(m.chat.id,"🎰 Выбери число от 1 до 10")
+
 
 @bot.message_handler(func=lambda m: m.text and m.text.isdigit() and get_player(m.from_user).get("roulette"))
 def roulette_mef_play(m):
