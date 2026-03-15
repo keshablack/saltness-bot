@@ -566,6 +566,15 @@ def buy_district(m):
     except:
         bot.send_message(m.chat.id,"Напиши: купить номер_района")
         return
+        
+    # проверка владеет ли игрок районом
+for d in districts.values():
+    if d["owner"] == str(m.from_user.id):
+        bot.send_message(
+            m.chat.id,
+            "❌ Ты уже владеешь районом"
+        )
+        return
 
     if num not in districts:
         bot.send_message(m.chat.id,"Такого района нет")
@@ -622,7 +631,7 @@ def attack_district(m):
     now = time.time()
 
     # кулдаун 10 минут
-    if now - p["attack_last"] < 1200:
+    if now - p["attack_last"] < 600:
         left = int(600 - (now - p["attack_last"]))
         bot.send_message(
             m.chat.id,
@@ -662,8 +671,24 @@ def attack_district(m):
 
     if chance <= 30:
 
-        d["owner"] = str(m.from_user.id)
+    uid = str(m.from_user.id)
+    old = None
 
+    # ищем старый район
+    for dist in districts.values():
+        if dist["owner"] == uid:
+            old = dist["name"]
+            dist["owner"] = None
+
+    # назначаем новый район
+    d["owner"] = uid
+
+    if old:
+        bot.send_message(
+            m.chat.id,
+            f"⚔ Ты потерял район {old} и захватил {d['name']}"
+        )
+    else:
         bot.send_message(
             m.chat.id,
             f"⚔ Ты захватил район {d['name']}"
