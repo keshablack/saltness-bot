@@ -722,7 +722,7 @@ def generate_map():
 
 }
 
-    for i, d in districts.items():
+for i, d in districts.items():
 
     i = int(i)
 
