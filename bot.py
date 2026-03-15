@@ -61,6 +61,7 @@ def get_player(user):
             "ref_reward":0,
             "district_time":0,
             "promos":[],
+            "attack_last": 0,
             "roulette_rub":False
         }
 
@@ -617,6 +618,17 @@ def attack_district(m):
 
     p = get_player(m.from_user)
 
+    now = time.time()
+
+    # кулдаун 10 минут
+    if now - p["attack_last"] < 600:
+        left = int(600 - (now - p["attack_last"]))
+        bot.send_message(
+            m.chat.id,
+            f"⏳ Нападать можно через {left} сек"
+        )
+        return
+
     try:
         num = int(m.text.split()[1])
     except:
@@ -630,10 +642,7 @@ def attack_district(m):
     d = districts[num]
 
     if d["owner"] == str(m.from_user.id):
-        bot.send_message(
-            m.chat.id,
-            "Это твой район, нападать нельзя"
-        )
+        bot.send_message(m.chat.id, "Это твой район, нападать нельзя")
         return
 
     if not d["owner"]:
@@ -644,7 +653,9 @@ def attack_district(m):
         bot.send_message(m.chat.id, "Нужно 100000₽ для нападения")
         return
 
-        p["money"] -= 100000
+    # снимаем деньги
+    p["money"] -= 100000
+    p["attack_last"] = now
 
     chance = random.randint(1, 100)
 
