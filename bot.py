@@ -75,42 +75,33 @@ def get_player(user):
     return players[uid]
 
 try:
-    with open(DISTRICT_FILE,"r") as f:
-        districts=json.load(f)
-        districts = {int(k): v for k,v in districts.items()}
+
+    if not os.path.exists(DISTRICT_FILE):
+        print("districts.json не найден, создаём новый")
+
+        districts = {
+            1: {"name":"Заречье","owner":None,"income":10000,"price":225000},
+            2: {"name":"Индустриальный","owner":None,"income":10000,"price":225000},
+            3: {"name":"Северный","owner":None,"income":6000,"price":150000},
+            4: {"name":"Зашекснинский","owner":None,"income":14000,"price":300000}
+        }
+
+        save_districts()
+
+    else:
+        with open(DISTRICT_FILE,"r",encoding="utf-8") as f:
+            districts = json.load(f)
+
+        districts = {int(k):v for k,v in districts.items()}
 
 except:
+    print("Ошибка загрузки districts.json")
 
-    print("districts.json не найден, создаём новый")
-
-    districts={
-        1:{
-        "name":"Заречье",
-        "owner":None,
-        "income":10000,
-        "price":225000
-        },
-
-        2:{
-        "name":"Индустриальный",
-        "owner":None,
-        "income":10000,
-        "price":225000
-        },
-
-        3:{
-        "name":"Северный",
-        "owner":None,
-        "income":6000,
-        "price":150000
-        },
-
-        4:{
-        "name":"Зашекснинский",
-        "owner":None,
-        "income":14000,
-        "price":300000
-        }
+    districts = {
+        1: {"name":"Заречье","owner":None,"income":10000,"price":225000},
+        2: {"name":"Индустриальный","owner":None,"income":10000,"price":225000},
+        3: {"name":"Северный","owner":None,"income":6000,"price":150000},
+        4: {"name":"Зашекснинский","owner":None,"income":14000,"price":300000}
     }
 
     save_districts()
