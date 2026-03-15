@@ -621,7 +621,7 @@ def attack_district(m):
     now = time.time()
 
     # кулдаун 10 минут
-    if now - p["attack_last"] < 600:
+    if now - p["attack_last"] < 1200:
         left = int(600 - (now - p["attack_last"]))
         bot.send_message(
             m.chat.id,
