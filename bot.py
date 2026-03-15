@@ -644,13 +644,13 @@ def attack_district(m):
         bot.send_message(m.chat.id, "Нужно 100000₽ для нападения")
         return
 
-    p["money"] -= 100000
+        p["money"] -= 100000
 
     chance = random.randint(1, 100)
 
     if chance <= 30:
 
-        if d["owner"] == str(m.from_user.id):
+        d["owner"] = str(m.from_user.id)
 
         bot.send_message(
             m.chat.id,
@@ -661,7 +661,7 @@ def attack_district(m):
 
         bot.send_message(
             m.chat.id,
-            "💀 Солнвые нарики этого района дали отпор"
+            "💀 Солевые нарики этого района дали отпор"
         )
 
     save()
