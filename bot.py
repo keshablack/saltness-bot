@@ -715,7 +715,7 @@ def generate_map():
 
         i=int(i)
 
-        if d["owner"]:
+        if d["owner"] is not None:
 
             draw.polygon(
                 areas[i],
