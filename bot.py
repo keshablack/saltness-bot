@@ -137,7 +137,7 @@ def check_black_market():
                     "А пока… шкурь клады.\n"
                     "Когда рынок откроется —\n"
                     "ты сможешь продать стафф\n"
-                    "💰 <b>без комиссии</b>.",
+                    "💰 <b>по цене выше</b>.",
                     parse_mode="HTML"
                 )
             except:
@@ -147,7 +147,7 @@ def check_black_market():
 
 
     # открытие рынка
-    if not black_market and random.randint(1,200) == 1:
+    if not black_market and random.randint(1,350) == 1:
 
         black_market = True
         black_market_end = now + 1200
