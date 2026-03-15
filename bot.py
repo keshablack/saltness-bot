@@ -724,7 +724,7 @@ def generate_map():
             )
 
 
-    img.save("map.jpg")
+    img.save("map_temp.jpg")
 
 
 # ===== РУЛЕТКИ =====
