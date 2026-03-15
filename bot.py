@@ -723,38 +723,38 @@ def generate_map():
 }
 
     for i, d in districts.items():
-    
-        i = int(i)
-    
-        if i in areas and d.get("owner"):
-    
-            poly = areas[i]
 
-draw.polygon(
-    poly,
-    fill=(255,0,0),
-    outline=(0,0,0)
-)
+    i = int(i)
 
-# центр полигона
-cx = sum(p[0] for p in poly) // len(poly)
-cy = sum(p[1] for p in poly) // len(poly)
+    if i in areas and d.get("owner"):
 
-owner = d["owner"]
+        poly = areas[i]
 
-if owner and owner in players:
-    name = players[owner]["name"]
+        draw.polygon(
+            poly,
+            fill=(255,0,0),
+            outline=(0,0,0)
+        )
 
-    draw.text(
-        (cx,cy),
-        name,
-        fill=(255,255,255),
-        anchor="mm",
-        font=font
-    )
+        # центр полигона
+        cx = sum(p[0] for p in poly) // len(poly)
+        cy = sum(p[1] for p in poly) // len(poly)
 
+        owner = d["owner"]
 
-    img.save("map_temp.jpg")
+        if owner and owner in players:
+
+            name = players[owner]["name"]
+
+            draw.text(
+                (cx, cy),
+                name,
+                fill=(255,255,255),
+                anchor="mm",
+                font=font
+            )
+
+img.save("map_temp.jpg")
 
 
 # ===== РУЛЕТКИ =====
