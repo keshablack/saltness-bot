@@ -650,7 +650,7 @@ def attack_district(m):
 
     if chance <= 30:
 
-        d["owner"] = p["name"]
+        if d["owner"] == str(m.from_user.id)
 
         bot.send_message(
             m.chat.id,
