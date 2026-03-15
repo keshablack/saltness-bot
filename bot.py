@@ -687,6 +687,9 @@ def generate_map():
     img = BASE_MAP.copy()
     draw = ImageDraw.Draw(img)
 
+    from PIL import ImageFont
+    font = ImageFont.truetype("arial.ttf", 30)
+
     areas = {
 
 1:[
@@ -725,11 +728,30 @@ def generate_map():
     
         if i in areas and d.get("owner"):
     
-            draw.polygon(
-                areas[i],
-                fill=(255,0,0),
-                outline=(0,0,0)
-            )
+            poly = areas[i]
+
+draw.polygon(
+    poly,
+    fill=(255,0,0),
+    outline=(0,0,0)
+)
+
+# центр полигона
+cx = sum(p[0] for p in poly) // len(poly)
+cy = sum(p[1] for p in poly) // len(poly)
+
+owner = d["owner"]
+
+if owner and owner in players:
+    name = players[owner]["name"]
+
+    draw.text(
+        (cx,cy),
+        name,
+        fill=(255,255,255),
+        anchor="mm",
+        font=font
+    )
 
 
     img.save("map_temp.jpg")
