@@ -712,15 +712,17 @@ def generate_map():
 }
 
     for i, d in districts.items():
-
-        i=int(i)
-
-        if d["owner"] is not None:
-
+    
+        i = int(i)
+    
+        if i in areas and d.get("owner"):
+    
             draw.polygon(
                 areas[i],
-                fill=(255,0,0)
+                fill=(255,0,0),
+                outline=(0,0,0)
             )
+
 
     img.save("map_temp.jpg")
 
