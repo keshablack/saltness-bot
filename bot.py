@@ -19,6 +19,9 @@ ADMIN_ID = 7740504336
 DATA_FILE = os.getenv("DATA_FILE","players.json")
 DISTRICT_FILE = "data/districts.json"
 
+import os
+os.makedirs("data", exist_ok=True)
+
 try:
     with open(DATA_FILE,"r") as f:
         players=json.load(f)
