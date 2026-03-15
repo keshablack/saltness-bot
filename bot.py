@@ -297,17 +297,20 @@ def broadcast(m):
 
     sent = 0
 
+    import time
+
     for uid in players:
         try:
-            bot.send_message(int(uid), f"📢 ОБЪЯВЛЕНИЕ\n\n{text}")
-            sent += 1
+            bot.send_message(uid, text)
+            time.sleep(0.05)
         except:
             pass
-
-    bot.send_message(
-        m.chat.id,
-        f"Рассылка отправлена\nПолучили: {sent}"
-    )
+    
+    
+        bot.send_message(
+            m.chat.id,
+            f"Рассылка отправлена\nПолучили: {sent}"
+        )
 
 
 @bot.message_handler(commands=["givemoney"])
