@@ -875,32 +875,57 @@ def work(m):
         p["last"]=now
         save()
 
-    # ===== МАСТЕРКЛАД (3%) =====
+    
+            # ===== МАСТЕРКЛАД (3%) =====
     if r<=3:
-
-        p["mef"]+=10
-        p["total"]+=10
-
+    
+        p["mef"] += 10
+        p["total"] += 10
+    
+        username = m.from_user.username
+        if username:
+            username = "@" + username
+        else:
+            username = m.from_user.first_name
+    
         with open("masterklad.PNG","rb") as photo:
-
+    
             bot.send_photo(
                 m.chat.id,
                 photo,
                 caption=f"""
-💎 МАСТЕРКЛАД
-
-Ого… ты сошкурил чей-то мастерклад
-
-🧊 +10г мефа
-
-📦 Теперь у тебя:
-🧊 {p['mef']}г
-🧂 {p['sol']}г
-💰 {p['money']}₽
-""",
+    💎 МАСТЕРКЛАД
+    
+    Ого… ты сошкурил чей-то мастерклад
+    
+    🧊 +10г мефа
+    
+    📦 Теперь у тебя:
+    🧊 {p['mef']}г
+    🧂 {p['sol']}г
+    💰 {p['money']}₽
+    """,
                 reply_markup=menu()
             )
-
+    
+        # уведомление всем игрокам
+        for uid in players:
+            if str(uid) == str(m.from_user.id):
+                continue
+            try:
+                bot.send_message(
+                    int(uid),
+                    f"""
+    💎 МАСТЕРКЛАД!
+    
+    {username} нашёл мастерклад!
+    
+    🧊 +10 мефа
+    """
+                )
+            except:
+                pass
+            
 
     # ===== МЕФ (20%) =====
     elif r<=23:
