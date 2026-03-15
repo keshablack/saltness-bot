@@ -704,6 +704,8 @@ def attack_district(m):
     save()
     save_districts()
 
+BASE_MAP = Image.open("map.jpg")
+
 def generate_map():
 
     img = BASE_MAP.copy()
