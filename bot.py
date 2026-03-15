@@ -727,7 +727,7 @@ def generate_map():
 @bot.message_handler(func=lambda m:m.text=="🎰 Рулетка ₽")
 def rub_start(m):
     p=get_player(m.from_user)
-    bot.send_message(m.chat.id,"🎰 Введи ставку от 1000 до 10000")
+    bot.send_message(m.chat.id,"🎰 Введи ставку от 100 до 10000")
     p["roulette_rub"]=True
     save()
 
@@ -785,12 +785,12 @@ def roulette_rub_play(m):
     p = get_player(m.from_user)
     bet = int(m.text)
 
-    if bet < 1000 or bet > 10000:
-        bot.send_message(m.chat.id,"⚠️ Ставка должна быть от 1000 до 10000 ₽")
+    if bet < 100 or bet > 10000:
+        bot.send_message(m.chat.id,"⚠️ Ставка должна быть от 100 до 10000 ₽")
         return
 
     if p["money"] < bet:
-        bot.send_message(m.chat.id,"💸 Недостаточно денег")
+        bot.send_message(m.chat.id,"💸 Недостаточно денег, иди мути бабос")
         return
 
     p["roulette_rub"] = False
