@@ -556,25 +556,25 @@ def city_map(m):
         )
 
 
-@bot.message_handler(func=lambda m:m.text.startswith("купить"))
+@bot.message_handler(func=lambda m: m.text.startswith("купить"))
 def buy_district(m):
 
-    p=get_player(m.from_user)
+    p = get_player(m.from_user)
 
     try:
-        num=int(m.text.split()[1])
+        num = int(m.text.split()[1])
     except:
         bot.send_message(m.chat.id,"Напиши: купить номер_района")
         return
-        
+
     # проверка владеет ли игрок районом
-for d in districts.values():
-    if d["owner"] == str(m.from_user.id):
-        bot.send_message(
-            m.chat.id,
-            "❌ Ты уже владеешь районом"
-        )
-        return
+    for d in districts.values():
+        if d["owner"] == str(m.from_user.id):
+            bot.send_message(
+                m.chat.id,
+                "❌ Ты уже владеешь районом"
+            )
+            return
 
     if num not in districts:
         bot.send_message(m.chat.id,"Такого района нет")
