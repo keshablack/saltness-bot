@@ -66,6 +66,9 @@ def get_player(user):
 
     p = players[uid]
 
+    p["id"] = uid
+
+
     # фикс старых игроков
     p.setdefault("ref",None)
     p.setdefault("refs",0)
