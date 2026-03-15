@@ -673,16 +673,16 @@ def attack_district(m):
 
         uid = str(m.from_user.id)
         old = None
-    
+
         # ищем старый район
         for dist in districts.values():
             if dist["owner"] == uid:
                 old = dist["name"]
                 dist["owner"] = None
-    
+
         # назначаем новый район
         d["owner"] = uid
-    
+
         if old:
             bot.send_message(
                 m.chat.id,
@@ -693,19 +693,16 @@ def attack_district(m):
                 m.chat.id,
                 f"⚔ Ты захватил район {d['name']}"
             )
-    
-        else:
-    
-            bot.send_message(
-                m.chat.id,
-                "💀 Солевые нарики этого района дали отпор"
-            )
-    
-        save()
-        save_districts()
-    
-    
-    BASE_MAP = Image.open("map.jpg")
+
+    else:
+
+        bot.send_message(
+            m.chat.id,
+            "💀 Солевые нарики этого района дали отпор"
+        )
+
+    save()
+    save_districts()
 
 def generate_map():
 
