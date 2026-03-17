@@ -80,6 +80,8 @@ def get_player(user):
 
     players[uid]["name"]=user.first_name
 
+    district_income(p)
+
     return players[uid]
 
 try:
