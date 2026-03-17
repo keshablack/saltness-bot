@@ -382,6 +382,31 @@ def reset_refs(m):
 
         bot.send_message(m.chat.id, f"💀 обнулил {uid}")
 
+@bot.message_handler(commands=["set_money"])
+def set_money(m):
+
+    if m.from_user.id != ADMIN_ID:
+        return
+
+    try:
+        uid = m.text.split()[1]
+        amount = int(m.text.split()[2])
+    except:
+        bot.send_message(m.chat.id, "Напиши: /set_money id сумма")
+        return
+
+    if uid in players:
+        players[uid]["money"] = amount
+
+        save()
+
+        bot.send_message(
+            m.chat.id,
+            f"💀 Установил {amount}₽ игроку {uid}"
+        )
+    else:
+        bot.send_message(m.chat.id, "Игрок не найден")
+
 
 
 # ===== ТОП =====
