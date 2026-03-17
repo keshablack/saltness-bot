@@ -90,9 +90,9 @@ try:
         print("districts.json не найден, создаём новый")
 
         districts = {
-            1: {"name":"Заречье","owner":None,"income":30000,"price":225000},
-            2: {"name":"Индустриальный","owner":None,"income":30000,"price":225000},
-            3: {"name":"Северный","owner":None,"income":20000,"price":150000},
+            1: {"name":"Заречье","owner":None,"income":40000,"price":225000},
+            2: {"name":"Индустриальный","owner":None,"income":40000,"price":225000},
+            3: {"name":"Северный","owner":None,"income":30000,"price":150000},
             4: {"name":"Зашекснинский","owner":None,"income":60000,"price":300000}
         }
 
@@ -108,9 +108,9 @@ except:
     print("Ошибка загрузки districts.json")
 
     districts = {
-        1: {"name":"Заречье","owner":None,"income":30000,"price":225000},
-        2: {"name":"Индустриальный","owner":None,"income":30000,"price":225000},
-        3: {"name":"Северный","owner":None,"income":20000,"price":150000},
+        1: {"name":"Заречье","owner":None,"income":40000,"price":225000},
+        2: {"name":"Индустриальный","owner":None,"income":40000,"price":225000},
+        3: {"name":"Северный","owner":None,"income":30000,"price":150000},
         4: {"name":"Зашекснинский","owner":None,"income":60000,"price":300000}
     }
 
