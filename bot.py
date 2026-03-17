@@ -40,46 +40,62 @@ def save_districts():
 
 def get_player(user):
 
-    uid=str(user.id)
+    uid = str(user.id)
 
     if uid not in players:
 
-        players[uid]={
-            "name":user.first_name,
-            "mef":0,
-            "sol":0,
-            "money":0,
-            "xp":0,
-            "lvl":1,
-            "last":0,
-            "roulette":False,
-            "lab_lvl":1,
-            "lab_last":0,
-            "total":0,
-            "ref":None,
-            "refs":0,
-            "ref_reward":0,
-            "district_time":0,
-            "promos":[],
+        players[uid] = {
+            "name": user.first_name,
+            "mef": 0,
+            "sol": 0,
+            "money": 0,
+            "xp": 0,
+            "lvl": 1,
+            "last": 0,
+            "roulette": False,
+            "lab_lvl": 1,
+            "lab_last": 0,
+            "total": 0,
+            "ref": None,
+            "refs": 0,
+            "ref_reward": 0,
+            "district_time": 0,
+            "promos": [],
             "attack_last": 0,
-            "roulette_rub":False
+            "ref_used": False,
+            "roulette_rub": False
         }
 
     p = players[uid]
 
     p["id"] = uid
 
+    # фиксы старых игроков
+    p.setdefault("ref", None)
+    p.setdefault("refs", 0)
+    p.setdefault("ref_reward", 0)
+    p.setdefault("ref_used", False)
 
-    # фикс старых игроков
-    p.setdefault("ref",None)
-    p.setdefault("refs",0)
-    p.setdefault("ref_reward",0)
+    p.setdefault("district_time", 0)
+    p.setdefault("attack_last", 0)
 
-    p.setdefault("district_time",0)
-    p.setdefault("attack_last",0)
+    players[uid]["name"] = user.first_name
 
-    players[uid]["name"]=user.first_name
+    # 💀 РЕФЕРАЛЬНАЯ НАГРАДА
+    if p.get("ref") and not p.get("ref_used"):
 
+        if p["lvl"] >= 2:
+
+            ref_id = p["ref"]
+
+            if ref_id in players:
+                players[ref_id]["sol"] += 5
+                players[ref_id]["refs"] += 1
+                players[ref_id]["ref_reward"] += 5
+
+            p["ref_used"] = True
+
+    # 💰 ДОХОД РАЙОНОВ
     district_income(p)
 
     return players[uid]
@@ -226,23 +242,19 @@ def back(m):
 @bot.message_handler(commands=["start"])
 def start(m):
 
-    p=get_player(m.from_user)
+    p = get_player(m.from_user)
 
-    args=m.text.split()
+    args = m.text.split()
 
-    if len(args)>1:
+    if len(args) > 1:
 
-        ref_id=args[1]
+        ref_id = args[1]
 
-        if ref_id!=str(m.from_user.id) and not p.get("ref"):
+        if ref_id != str(m.from_user.id) and not p.get("ref"):
 
             if ref_id in players:
 
-                players[ref_id]["sol"]+=5
-                players[ref_id]["refs"]+=1
-                players[ref_id]["ref_reward"]+=5
-
-                p["ref"]=ref_id
+                p["ref"] = ref_id
 
                 bot.send_message(
                     m.chat.id,
