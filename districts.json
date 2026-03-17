@@ -2,25 +2,25 @@
   "1": {
     "name": "Заречье",
     "owner": null,
-    "income": 10000,
+    "income": 30000,
     "price": 225000
   },
   "2": {
     "name": "Индустриальный",
     "owner": null,
-    "income": 10000,
+    "income": 30000,
     "price": 225000
   },
   "3": {
     "name": "Северный",
     "owner": null,
-    "income": 6000,
+    "income": 20000,
     "price": 150000
   },
   "4": {
     "name": "Зашекснинский",
     "owner": null,
-    "income": 14000,
+    "income": 60000,
     "price": 300000
   }
 }
