@@ -659,12 +659,12 @@ def attack_district(m):
         bot.send_message(m.chat.id, "Район свободен")
         return
 
-    if p["money"] < 100000:
-        bot.send_message(m.chat.id, "Нужно 100000₽ для нападения")
+    if p["money"] < 500000:
+        bot.send_message(m.chat.id, "Нужно 500000₽ для нападения")
         return
 
     # снимаем деньги
-    p["money"] -= 100000
+    p["money"] -= 500000
     p["attack_last"] = now
 
     chance = random.randint(1, 100)
