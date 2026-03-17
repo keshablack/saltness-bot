@@ -1343,4 +1343,194 @@ def market_loop():
         time.sleep(10)
 
 threading.Thread(target=market_loop, daemon=True).start()
+
+# ===== БАНДЫ =====
+
+BANDS_FILE = "data/bands.json"
+
+try:
+    with open(BANDS_FILE, "r", encoding="utf-8") as f:
+        bands = json.load(f)
+except:
+    bands = {}
+
+def save_bands():
+    with open(BANDS_FILE, "w", encoding="utf-8") as f:
+        json.dump(bands, f)
+
+@bot.message_handler(func=lambda m: m.text=="👥 Банды")
+def bands_menu(m):
+    p = get_player(m.from_user)
+
+    if p.get("band"):
+        b = bands.get(p["band"])
+        if not b:
+            p["band"] = None
+            save()
+            return
+
+        text = f"👥 Твоя банда: {b['name']}\n\n"
+        text += f"👑 Главный солевой: {players[b['owner']]['name']}\n\n"
+        text += "👥 Участники:\n"
+
+        for uid in b["members"]:
+            name = players.get(uid, {}).get("name","???")
+            text += f"- {name}\n"
+
+        if str(m.from_user.id) == b["owner"]:
+            text += f"\n📨 Заявки: {len(b['requests'])}\n"
+            text += "✔ принять [номер]\n❌ отклонить [номер]\n"
+
+        text += "\n🚪 выйти"
+
+        bot.send_message(m.chat.id, text)
+        return
+
+    text = "👥 Банды\n\n"
+
+    for i,(bid,b) in enumerate(bands.items(),1):
+        text += f"{i}. {b['name']}\n"
+        text += f"👤 {players.get(b['owner'],{}).get('name','???')}\n"
+        text += f"👥 {len(b['members'])}/5\n\n"
+
+    text += "💰 создать\n📥 вступить [номер]"
+
+    bot.send_message(m.chat.id, text)
+
+@bot.message_handler(func=lambda m: m.text=="создать")
+def create_band(m):
+    p = get_player(m.from_user)
+
+    if p.get("band"):
+        bot.send_message(m.chat.id,"Ты уже в банде")
+        return
+
+    if p["money"] < 500000:
+        bot.send_message(m.chat.id,"Нужно 500000₽")
+        return
+
+    bid = str(len(bands)+1)
+
+    bands[bid] = {
+        "name": f"Банда {bid}",
+        "owner": str(m.from_user.id),
+        "members": [str(m.from_user.id)],
+        "requests": []
+    }
+
+    p["money"] -= 500000
+    p["band"] = bid
+
+    save()
+    save_bands()
+
+    bot.send_message(m.chat.id,"💀 Банда создана")
+
+@bot.message_handler(func=lambda m: m.text.startswith("вступить"))
+def join_band(m):
+    p = get_player(m.from_user)
+
+    if p.get("band"):
+        bot.send_message(m.chat.id,"Ты уже в банде")
+        return
+
+    try:
+        num = int(m.text.split()[1]) - 1
+    except:
+        bot.send_message(m.chat.id,"вступить номер")
+        return
+
+    if num >= len(bands):
+        bot.send_message(m.chat.id,"Нет такой банды")
+        return
+
+    bid = list(bands.keys())[num]
+    b = bands[bid]
+
+    b["requests"].append(str(m.from_user.id))
+    save_bands()
+
+    bot.send_message(m.chat.id,"📨 заявка отправлена")
+
+@bot.message_handler(func=lambda m: m.text.startswith("принять"))
+def accept(m):
+    p = get_player(m.from_user)
+
+    if not p.get("band"):
+        return
+
+    b = bands.get(p["band"])
+
+    if str(m.from_user.id) != b["owner"]:
+        return
+
+    try:
+        num = int(m.text.split()[1]) - 1
+    except:
+        return
+
+    if num >= len(b["requests"]):
+        return
+
+    uid = b["requests"].pop(num)
+
+    if len(b["members"]) < 5:
+        b["members"].append(uid)
+        if uid in players:
+            players[uid]["band"] = p["band"]
+
+    save()
+    save_bands()
+
+    bot.send_message(m.chat.id,"✔ принят")
+
+@bot.message_handler(func=lambda m: m.text.startswith("отклонить"))
+def decline(m):
+    p = get_player(m.from_user)
+
+    if not p.get("band"):
+        return
+
+    b = bands.get(p["band"])
+
+    if str(m.from_user.id) != b["owner"]:
+        return
+
+    try:
+        num = int(m.text.split()[1]) - 1
+    except:
+        return
+
+    if num >= len(b["requests"]):
+        return
+
+    b["requests"].pop(num)
+
+    save_bands()
+
+    bot.send_message(m.chat.id,"❌ отклонено")
+
+@bot.message_handler(func=lambda m: m.text=="выйти")
+def leave(m):
+    p = get_player(m.from_user)
+
+    if not p.get("band"):
+        return
+
+    b = bands.get(p["band"])
+    uid = str(m.from_user.id)
+
+    if uid == b["owner"]:
+        del bands[p["band"]]
+    else:
+        if uid in b["members"]:
+            b["members"].remove(uid)
+
+    p["band"] = None
+
+    save()
+    save_bands()
+
+    bot.send_message(m.chat.id,"🚪 ты вышел из банды")
+
 bot.infinity_polling(skip_pending=True)
