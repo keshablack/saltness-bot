@@ -79,6 +79,8 @@ def get_player(user):
     p.setdefault("district_time", 0)
     p.setdefault("attack_last", 0)
 
+    p.setdefault("band", None)
+
     players[uid]["name"] = user.first_name
 
     # 💀 РЕФЕРАЛЬНАЯ НАГРАДА
