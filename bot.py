@@ -640,11 +640,11 @@ def fix_income(m):
         if d["name"] == "Зашекснинский":
             d["income"] = 60000
         elif d["name"] == "Заречье":
-            d["income"] = 30000
+            d["income"] = 40000
         elif d["name"] == "Индустриальный":
-            d["income"] = 30000
+            d["income"] = 40000
         elif d["name"] == "Северный":
-            d["income"] = 20000
+            d["income"] = 30000
 
     save_districts()
 
