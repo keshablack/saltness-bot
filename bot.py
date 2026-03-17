@@ -633,6 +633,24 @@ def district_income(p):
             pass
 
 
+@bot.message_handler(commands=["fix_income"])
+def fix_income(m):
+
+    for d in districts.values():
+        if d["name"] == "Зашекснинский":
+            d["income"] = 60000
+        elif d["name"] == "Заречье":
+            d["income"] = 30000
+        elif d["name"] == "Индустриальный":
+            d["income"] = 30000
+        elif d["name"] == "Северный":
+            d["income"] = 20000
+
+    save_districts()
+
+    bot.send_message(m.chat.id, "💀 доходы обновлены")
+
+
 @bot.message_handler(func=lambda m: m.text.startswith("напасть"))
 def attack_district(m):
 
