@@ -614,7 +614,7 @@ def district_income(p):
 
     for d in districts.values():
 
-        if d["owner"] == str(p["id"]):
+        if d["owner"] == p["id"]:
             total += d["income"]
 
     if total > 0:
@@ -622,7 +622,15 @@ def district_income(p):
         p["money"] += total
         p["district_time"] = now
 
-        print(f"Игрок получил доход районов: {total}")
+        save()
+
+        try:
+            bot.send_message(
+                p["id"],
+                f"🏙 Доход с районов\n\n💰 +{total}₽"
+            )
+        except:
+            pass
 
 
 @bot.message_handler(func=lambda m: m.text.startswith("напасть"))
