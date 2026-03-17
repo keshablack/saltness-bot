@@ -361,6 +361,27 @@ def give_money(m):
     )
 
 
+@bot.message_handler(commands=["reset_refs"])
+def reset_refs(m):
+
+    if m.from_user.id != ADMIN_ID:
+        return
+
+    try:
+        uid = m.text.split()[1]
+    except:
+        bot.send_message(m.chat.id, "Напиши: /reset_refs id")
+        return
+
+    if uid in players:
+        players[uid]["refs"] = 0
+        players[uid]["ref_reward"] = 0
+        players[uid]["sol"] = 0
+
+        save()
+
+        bot.send_message(m.chat.id, f"💀 обнулил {uid}")
+
 
 
 # ===== ТОП =====
@@ -475,6 +496,7 @@ def ref_link(m):
 
 За каждого друга:
 🧂 +5 соли
+Условие: Твой друг должен получить 2 лвл
 
 Твоя ссылка:
 
