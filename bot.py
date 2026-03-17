@@ -391,16 +391,26 @@ def top(m):
 
     top_farm = sorted(players.values(), key=lambda x: x.get("total",0), reverse=True)[:10]
     top_refs = sorted(players.values(), key=lambda x: x.get("refs",0), reverse=True)[:10]
+    top_money = sorted(players.values(), key=lambda x: x.get("money",0), reverse=True)[:5]
 
     text = "🏆 Топ шкуроходов\n\n"
 
+    # 💊 топ по стаффу
     for i,p in enumerate(top_farm,1):
         text += f"{i}. {p['name']} — {p.get('total',0)} стаффа\n"
 
     text += "\n👥 Топ рефералов\n\n"
 
+    # 👥 топ рефералов
     for i,p in enumerate(top_refs,1):
         text += f"{i}. {p['name']} — {p.get('refs',0)} друзей\n"
+
+    text += "\n💰 Топ богатых\n\n"
+
+    # 💰 топ денег
+    for i,p in enumerate(top_money,1):
+        money = p.get("money",0)
+        text += f"{i}. {p['name']} — {money:,}₽\n"
 
     bot.send_message(
         m.chat.id,
