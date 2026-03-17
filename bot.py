@@ -541,7 +541,7 @@ def city_map(m):
 пример: купить 2
 
 💣 напасть [номер]
-стоимость атаки: 500000₽
+стоимость атаки: 300000₽
 шанс захвата: 30%
 
 📥 доход районов начисляется каждый час
@@ -659,12 +659,12 @@ def attack_district(m):
         bot.send_message(m.chat.id, "Район свободен")
         return
 
-    if p["money"] < 500000:
-        bot.send_message(m.chat.id, "Нужно 500000₽ для нападения")
+    if p["money"] < 300000:
+        bot.send_message(m.chat.id, "Нужно 300000₽ для нападения")
         return
 
     # снимаем деньги
-    p["money"] -= 500000
+    p["money"] -= 300000
     p["attack_last"] = now
 
     chance = random.randint(1, 100)
