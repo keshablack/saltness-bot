@@ -982,31 +982,39 @@ def roulette_rub_play(m):
 @bot.message_handler(func=lambda m:m.text=="🧪 Шкурить")
 def work(m):
 
-    p=get_player(m.from_user)
+    p = get_player(m.from_user)
 
-    now=time.time()
+    # 💀 анти-спам (фикс двойного клика)
+    if p.get("working"):
+        return
 
-    cooldown=180-(p["lvl"]*4)-(p["lab_lvl"]*10)
+    p["working"] = True
 
-    if cooldown<30:
-        cooldown=30
+    now = time.time()
 
-    if now-p["last"]<cooldown:
+    cooldown = 180 - (p["lvl"]*4) - (p["lab_lvl"]*10)
 
-        seconds=int(cooldown-(now-p["last"]))
+    if cooldown < 30:
+        cooldown = 30
+
+    if now - p["last"] < cooldown:
+
+        seconds = int(cooldown - (now - p["last"]))
 
         bot.send_message(
             m.chat.id,
             f"⏱ Ну ты чайка, потерпи еще {seconds} сек",
             reply_markup=menu()
         )
+
+        p["working"] = False  # 💀 обязательно сбрасываем
         return
 
 
-    r=random.randint(1,100)
-    amount=random.randint(1,3)
+    r = random.randint(1,100)
+    amount = random.randint(1,3)
 
-    p["xp"]+=1
+    p["xp"] += 1
 
     # ===== ПРОКАЧКА =====
     need=p["lvl"]*10
@@ -1027,7 +1035,10 @@ def work(m):
 """
         )
 
-        p["last"]=now
+        p["last"] = now
+
+        p["working"] = False  # 💀 снимаем блок
+
         save()
 
     
