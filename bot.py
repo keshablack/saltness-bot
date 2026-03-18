@@ -986,12 +986,17 @@ def work(m):
 
     now = time.time()
 
+    # 💀 анти-спам 1 сек
+    if now - p.get("last_click", 0) < 1:
+        return
+
+    p["last_click"] = now
+
     cooldown = 180 - (p["lvl"]*4) - (p["lab_lvl"]*10)
 
     if cooldown < 30:
         cooldown = 30
 
-    # 💀 сначала проверка кулдауна
     if now - p["last"] < cooldown:
 
         seconds = int(cooldown - (now - p["last"]))
@@ -1002,13 +1007,6 @@ def work(m):
             reply_markup=menu()
         )
         return
-
-    # 💀 теперь анти-спам
-    if p.get("working"):
-        return
-
-    p["working"] = True
-
 
     r = random.randint(1,100)
     amount = random.randint(1,3)
