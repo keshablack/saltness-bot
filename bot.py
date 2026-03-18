@@ -1051,7 +1051,7 @@ def work(m):
         bot.send_message(
             m.chat.id,
             f"""
-⭐ Новый уровень!
+⭐ Ебать, новый уровень!
 
 Теперь ты {p['lvl']} уровень
 
@@ -1108,7 +1108,7 @@ def work(m):
                     f"""
     💎 МАСТЕРКЛАД!
     
-    {username} нашёл мастерклад!
+    {username} сошкурил мастерклад!
     
     🧊 +10 мефа
     """
@@ -1433,11 +1433,11 @@ def bands_menu(m):
     text += "💰 создать\n📥 вступить [номер]"
 
     with open("band.png","rb") as photo:
-    bot.send_photo(
-        m.chat.id,
-        photo,
-        caption=text
-    )
+        bot.send_photo(
+            m.chat.id,
+            photo,
+            caption=text
+        )
 
 @bot.message_handler(func=lambda m: m.text.startswith("создать"))
 def create_band(m):
