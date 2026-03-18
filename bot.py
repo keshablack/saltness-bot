@@ -200,7 +200,7 @@ def menu():
     kb.row("🧪 Шкурить")
     kb.row("📦 Инвентарь","🐙 Кракен")
     kb.row("🧪 Лаборатория","🏆 Топ")
-    kb.add("🗺 Карта города","👥 Банды REMONT")
+    kb.add("🗺 Карта города","👥 Банды")
 
     return kb
 
@@ -1432,36 +1432,48 @@ def bands_menu(m):
 
     text += "💰 создать\n📥 вступить [номер]"
 
-    bot.send_message(m.chat.id, text)
+    with open("band.png","rb") as photo:
+    bot.send_photo(
+        m.chat.id,
+        photo,
+        caption=text
+    )
 
-@bot.message_handler(func=lambda m: m.text=="создать")
+@bot.message_handler(func=lambda m: m.text.startswith("создать"))
 def create_band(m):
+
     p = get_player(m.from_user)
 
     if p.get("band"):
-        bot.send_message(m.chat.id,"Ты уже в банде")
+        bot.send_message(m.chat.id,"Эй шкуроход, ты уже в банде")
         return
 
-    if p["money"] < 500000:
-        bot.send_message(m.chat.id,"Нужно 500000₽")
+    try:
+        name = m.text.split(" ",1)[1]
+    except:
+        bot.send_message(m.chat.id,"Напиши: создать название")
+        return
+
+    if p["money"] < 1000000:
+        bot.send_message(m.chat.id,"💸 Нужно 1000000₽")
         return
 
     bid = str(len(bands)+1)
 
     bands[bid] = {
-        "name": f"Банда {bid}",
+        "name": name,
         "owner": str(m.from_user.id),
         "members": [str(m.from_user.id)],
         "requests": []
     }
 
-    p["money"] -= 500000
+    p["money"] -= 1000000
     p["band"] = bid
 
     save()
     save_bands()
 
-    bot.send_message(m.chat.id,"💀 Банда создана")
+    bot.send_message(m.chat.id,f"💀 Солевая торч банда «{name}» создана")
 
 @bot.message_handler(func=lambda m: m.text.startswith("вступить"))
 def join_band(m):
