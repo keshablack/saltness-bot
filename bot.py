@@ -33,6 +33,10 @@ def save():
     with open(DATA_FILE,"w") as f:
         json.dump(players,f)
 
+def save_bands():
+    with open(BANDS_FILE, "w") as f:
+        json.dump(bands, f)
+
 
 def save_districts():
 
@@ -134,6 +138,26 @@ except:
     }
 
     save_districts()
+
+try:
+    if not os.path.exists(BANDS_FILE):
+        print("bands.json не найден, создаём новый")
+
+        bands = {}
+
+        with open(BANDS_FILE, "w") as f:
+            json.dump(bands, f)
+
+    else:
+        with open(BANDS_FILE, "r") as f:
+            bands = json.load(f)
+
+except:
+    print("Ошибка загрузки bands.json")
+    bands = {}
+
+    with open(BANDS_FILE, "w") as f:
+        json.dump(bands, f)
 
 
 # ===== ЧЕРНЫЙ РЫНОК =====
