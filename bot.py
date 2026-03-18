@@ -1406,37 +1406,82 @@ def bands_menu(m):
             save()
             return
 
-        text = f"👥 Твоя банда: {b['name']}\n\n"
-        text += f"👑 Главный солевой: {players[b['owner']]['name']}\n\n"
-        text += "👥 Участники:\n"
+        text = f"""
+👥 <b>ТВОЯ БАНДА</b>
+━━━━━━━━━━━━━━
+
+🏴 <b>{b['name']}</b>
+
+👑 Главный солевой:
+{players[b['owner']]['name']}
+
+━━━━━━━━━━━━━━
+👥 <b>Участники:</b>
+"""
 
         for uid in b["members"]:
             name = players.get(uid, {}).get("name","???")
-            text += f"- {name}\n"
+            text += f"• {name}\n"
 
         if str(m.from_user.id) == b["owner"]:
-            text += f"\n📨 Заявки: {len(b['requests'])}\n"
-            text += "✔ принять [номер]\n❌ отклонить [номер]\n"
+            text += f"""
+━━━━━━━━━━━━━━
+📨 Заявки: {len(b['requests'])}
+
+✔ принять [номер]
+❌ отклонить [номер]
+
+✏ сменить_название [новое]
+"""
 
         text += "\n🚪 выйти"
 
-        bot.send_message(m.chat.id, text)
+        with open("band.png","rb") as photo:
+            bot.send_photo(
+                m.chat.id,
+                photo,
+                caption=text,
+                parse_mode="HTML"
+            )
         return
 
-    text = "👥 Банды\n\n"
+    # ===== СПИСОК БАНД =====
+    text = """
+👥 <b>БАНДЫ ГОРОДА</b>
+━━━━━━━━━━━━━━
+
+🏴 Выбирай стаю или создавай свою
+"""
 
     for i,(bid,b) in enumerate(bands.items(),1):
-        text += f"{i}. {b['name']}\n"
-        text += f"👤 {players.get(b['owner'],{}).get('name','???')}\n"
-        text += f"👥 {len(b['members'])}/5\n\n"
+        owner = players.get(b['owner'],{}).get('name','???')
 
-    text += "💰 создать\n📥 вступить [номер]"
+        text += f"""
+{i}. <b>{b['name']}</b>
+👑 {owner}
+👥 {len(b['members'])}/5
+"""
+
+    text += """
+━━━━━━━━━━━━━━
+
+💰 <b>Создать банду</b>
+└ создать [название]
+└ цена: 500000₽
+
+📥 <b>Вступить</b>
+└ вступить [номер]
+
+━━━━━━━━━━━━━━
+💀 Один — торчок. В банде — солевой качок.
+"""
 
     with open("band.png","rb") as photo:
         bot.send_photo(
             m.chat.id,
             photo,
-            caption=text
+            caption=text,
+            parse_mode="HTML"
         )
 
 @bot.message_handler(func=lambda m: m.text.startswith("создать"))
