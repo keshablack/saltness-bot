@@ -409,6 +409,33 @@ def set_money(m):
     else:
         bot.send_message(m.chat.id, "Игрок не найден")
 
+@bot.message_handler(commands=["set_lvl"])
+def set_lvl(m):
+
+    if m.from_user.id != ADMIN_ID:
+        return
+
+    try:
+        uid = m.text.split()[1]
+        lvl = int(m.text.split()[2])
+    except:
+        bot.send_message(m.chat.id, "Использование:\n/set_lvl id уровень")
+        return
+
+    if uid not in players:
+        bot.send_message(m.chat.id, "Игрок не найден")
+        return
+
+    players[uid]["lvl"] = lvl
+    players[uid]["xp"] = 0  # 💀 чтобы не багался уровень
+
+    save()
+
+    bot.send_message(
+        m.chat.id,
+        f"⭐ Установлен уровень {lvl} игроку {players[uid]['name']}"
+    )
+
 
 
 # ===== ТОП =====
