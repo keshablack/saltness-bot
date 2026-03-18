@@ -984,12 +984,6 @@ def work(m):
 
     p = get_player(m.from_user)
 
-    # 💀 анти-спам (фикс двойного клика)
-    if p.get("working"):
-        return
-
-    p["working"] = True
-
     now = time.time()
 
     cooldown = 180 - (p["lvl"]*4) - (p["lab_lvl"]*10)
@@ -997,6 +991,7 @@ def work(m):
     if cooldown < 30:
         cooldown = 30
 
+    # 💀 сначала проверка кулдауна
     if now - p["last"] < cooldown:
 
         seconds = int(cooldown - (now - p["last"]))
@@ -1006,9 +1001,13 @@ def work(m):
             f"⏱ Ну ты чайка, потерпи еще {seconds} сек",
             reply_markup=menu()
         )
-
-        p["working"] = False  # 💀 обязательно сбрасываем
         return
+
+    # 💀 теперь анти-спам
+    if p.get("working"):
+        return
+
+    p["working"] = True
 
 
     r = random.randint(1,100)
